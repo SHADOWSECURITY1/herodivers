@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report — Hero Diver Portal</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<script>
+  window.__SUPABASE_URL__ = '%%SUPABASE_URL%%';
+  window.__SUPABASE_ANON_KEY__ = '%%SUPABASE_ANON_KEY%%';
+</script>
+
+<nav id="mainNav">
+  <a href="https://herodivingandmarine.com" class="nav-brand">
+    <img src="logo.png" class="bottlecap-logo" style="height:48px;" alt="Hero Diving">
+    <span class="nav-brand-text">
+      <span class="nav-brand-name">Hero</span>
+      <span class="nav-brand-sub">Diver Portal</span>
+    </span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="reports.html">Reports</a></li>
+    <li><a href="new-report.html" class="nav-cta">New Report</a></li>
+    <li><button class="nav-sign-out" id="signOutBtn">Sign Out</button></li>
+  </ul>
+</nav>
+
+<div class="portal-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navigation</div>
+      <a href="dashboard.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="new-report.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        New Report
+      </a>
+      <a href="reports.html" class="sidebar-link active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        All Reports
+      </a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a href="#" class="sidebar-link" id="sidebarSignOut">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <main class="portal-main">
+    <div id="reportContent">
+      <div class="empty-state" style="padding:80px 0;">Loading report...</div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module">
+  import { requireAuth, signOut } from './auth.js';
+  import { supabase } from './supabase-client.js';
+
+  function toast(msg, type = 'info') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = `toast toast-${type}`;
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 5000);
+  }
+
+  function field(label, value) {
+    return `
+      <div class="report-field">
+        <div class="report-field-label">${label}</div>
+        <div class="report-field-value">${value || '—'}</div>
+      </div>`;
+  }
+
+  function section(title, fields) {
+    return `
+      <div class="report-section">
+        <div class="report-section-title">${title}</div>
+        <div class="report-field-grid">${fields.join('')}</div>
+      </div>`;
+  }
+
+  function renderReport(report) {
+    const d = report.report_data || {};
+    const date = new Date(report.created_at).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    document.getElementById('reportContent').innerHTML = `
+      <!-- Print header (hidden on screen) -->
+      <div class="print-header">
+        <img src="logo.png" alt="Hero Diving" style="height:60px; margin-bottom:12px;">
+        <h2 style="font-size:20px; letter-spacing:2px; text-transform:uppercase;">Hero Diving &amp; Marine Services</h2>
+        <p style="font-size:14px; color:#666;">herodivingandmarine.com</p>
+      </div>
+
+      <div class="page-header">
+        <div class="page-tag">${report.report_type || 'Inspection Report'}</div>
+        <h1 class="page-title">${report.vessel_name || 'Unnamed Vessel'}</h1>
+        <p class="page-subtitle">${date} &mdash; ${report.job_location || ''}</p>
+      </div>
+
+      <!-- Report actions -->
+      <div class="report-actions">
+        <a href="reports.html" class="btn-ghost">← All Reports</a>
+        <button class="btn-ghost" onclick="window.print()">Print / Save PDF</button>
+        ${report.status === 'draft' ? `<button class="btn-primary" id="sendReportBtn">Send to Client</button>` : `<span class="badge badge-sent" style="padding:12px 20px;">Sent ${report.sent_at ? new Date(report.sent_at).toLocaleDateString() : ''}</span>`}
+      </div>
+
+      <!-- Meta summary -->
+      <div class="report-meta">
+        ${field('Client', report.client_name)}
+        ${field('Client Email', report.client_email)}
+        ${field('Status', `<span class="badge badge-${report.status}">${report.status}</span>`)}
+        ${field('Vessel Name', report.vessel_name)}
+        ${field('Report Type', report.report_type)}
+        ${field('Inspection Date', d.inspection_date || '')}
+      </div>
+
+      <div class="report-view">
+
+        ${section('Vessel Details', [
+          field('Vessel Type', d.vessel_type),
+          field('Hull Material', d.hull_material),
+          field('Vessel Length', d.vessel_length ? `${d.vessel_length} ${d.length_unit || 'ft'}` : ''),
+          field('Year Built', d.year_built)
+        ])}
+
+        ${section('Hull Condition', [
+          `<div class="report-field" style="grid-column:span 2;">
+            <div class="report-field-label">Overall Hull Rating</div>
+            <div class="rating-display">${d.hull_rating || '—'}</div>
+          </div>`,
+          field('Marine Growth Coverage', d.marine_growth_coverage),
+          field('Marine Growth Type', d.marine_growth_type),
+          field('Antifouling Paint', d.antifouling_paint),
+          field('Hull Damage', d.hull_damage),
+          `<div class="report-field" style="grid-column:span 2;">
+            <div class="report-field-label">Hull Condition Notes</div>
+            <div class="report-field-value">${d.hull_notes || '—'}</div>
+          </div>`
+        ])}
+
+        ${section('Running Gear', [
+          field('Propeller Condition', d.propeller_condition),
+          field('Propeller Marine Growth', d.propeller_growth),
+          field('Shaft Condition', d.shaft_condition),
+          field('Rudder Condition', d.rudder_condition),
+          `<div class="report-field" style="grid-column:span 2;">
+            <div class="report-field-label">Running Gear Notes</div>
+            <div class="report-field-value">${d.running_gear_notes || '—'}</div>
+          </div>`
+        ])}
+
+        ${section('Anodes', [
+          field('Anode Condition', d.anode_condition),
+          field('Anode Count Remaining', d.anode_count),
+          `<div class="report-field" style="grid-column:span 2;">
+            <div class="report-field-label">Anode Notes</div>
+            <div class="report-field-value">${d.anode_notes || '—'}</div>
+          </div>`
+        ])}
+
+        ${section('Through-Hulls & Seacocks', [
+          field('Overall Condition', d.throughhull_condition),
+          field('Number of Through-Hulls', d.throughhull_count),
+          `<div class="report-field" style="grid-column:span 2;">
+            <div class="report-field-label">Through-Hull Notes</div>
+            <div class="report-field-value">${d.throughhull_notes || '—'}</div>
+          </div>`
+        ])}
+
+        ${section('Dive Conditions', [
+          field('Underwater Visibility', d.visibility),
+          field('Water Depth', d.water_depth ? `${d.water_depth} ${d.depth_unit || 'ft'}` : ''),
+          field('Water Temperature', d.water_temp ? `${d.water_temp}${d.temp_unit || '°F'}` : ''),
+          `<div class="report-field" style="grid-column:span 2;">
+            <div class="report-field-label">Diver Notes</div>
+            <div class="report-field-value">${d.dive_notes || '—'}</div>
+          </div>`
+        ])}
+
+        ${section('Recommendations', [
+          `<div class="report-field" style="grid-column:span 2;">
+            <div class="report-field-label">Action Priority</div>
+            <div class="report-field-value" style="font-weight:600; color:${
+              d.action_priority === 'Immediate Action Required' ? 'var(--signal-red)' :
+              d.action_priority === 'Within 30 Days' ? '#e85c27' :
+              d.action_priority === 'No Action Required' ? '#4ade80' : 'var(--white)'
+            };">${d.action_priority || '—'}</div>
+          </div>`,
+          `<div class="report-field" style="grid-column:span 2;">
+            <div class="report-field-label">Detailed Recommendations</div>
+            <div class="report-field-value">${d.recommendations || '—'}</div>
+          </div>`
+        ])}
+
+        ${section('Diver Certification', [
+          field('Diver Name', d.diver_name),
+          field('Certification Agency', d.cert_agency),
+          field('Certification Number', d.cert_number),
+          field('Hero Divers Member ID', d.hero_member_id)
+        ])}
+
+      </div>
+    `;
+
+    // Send button handler
+    const sendBtn = document.getElementById('sendReportBtn');
+    if (sendBtn) {
+      sendBtn.addEventListener('click', async () => {
+        if (!report.client_email) {
+          toast('No client email on record for this report', 'error');
+          return;
+        }
+        if (!confirm(`Send this report to ${report.client_email}?`)) return;
+        sendBtn.disabled = true;
+        sendBtn.textContent = 'Sending...';
+
+        try {
+          const res = await fetch('/.netlify/functions/send-report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              reportId: report.id,
+              reportData: report.report_data,
+              clientEmail: report.client_email,
+              clientName: report.client_name,
+              vesselName: report.vessel_name,
+              diverName: d.diver_name
+            })
+          });
+          if (!res.ok) throw new Error((await res.json()).error);
+          toast('Report sent to ' + report.client_email, 'success');
+          setTimeout(() => location.reload(), 2000);
+        } catch (e) {
+          toast('Send failed: ' + e.message, 'error');
+          sendBtn.disabled = false;
+          sendBtn.textContent = 'Send to Client';
+        }
+      });
+    }
+  }
+
+  async function init() {
+    const session = await requireAuth();
+    if (!session) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const reportId = params.get('id');
+    if (!reportId) {
+      window.location.href = '/reports.html';
+      return;
+    }
+
+    const { data: report, error } = await supabase
+      .from('reports')
+      .select('*')
+      .eq('id', reportId)
+      .eq('diver_id', session.user.id)
+      .single();
+
+    if (error || !report) {
+      document.getElementById('reportContent').innerHTML = '<div class="empty-state" style="padding:80px 0;">Report not found.</div>';
+      return;
+    }
+
+    renderReport(report);
+  }
+
+  document.getElementById('signOutBtn').addEventListener('click', signOut);
+  document.getElementById('sidebarSignOut').addEventListener('click', (e) => { e.preventDefault(); signOut(); });
+
+  init();
+</script>
+<script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Report — Hero Diver Portal</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<script>
+  window.__SUPABASE_URL__ = '%%SUPABASE_URL%%';
+  window.__SUPABASE_ANON_KEY__ = '%%SUPABASE_ANON_KEY%%';
+</script>
+
+<nav id="mainNav">
+  <a href="https://herodivingandmarine.com" class="nav-brand">
+    <img src="logo.png" class="bottlecap-logo" style="height:48px;" alt="Hero Diving">
+    <span class="nav-brand-text">
+      <span class="nav-brand-name">Hero</span>
+      <span class="nav-brand-sub">Diver Portal</span>
+    </span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="reports.html">Reports</a></li>
+    <li><button class="nav-sign-out" id="signOutBtn">Sign Out</button></li>
+  </ul>
+</nav>
+
+<div class="portal-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navigation</div>
+      <a href="dashboard.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="new-report.html" class="sidebar-link active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        New Report
+      </a>
+      <a href="reports.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        All Reports
+      </a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a href="#" class="sidebar-link" id="sidebarSignOut">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <main class="portal-main">
+    <div class="page-header">
+      <div class="page-tag">Inspection Report</div>
+      <h1 class="page-title">New Report</h1>
+      <p class="page-subtitle">Complete all sections — save as draft or send directly to your client</p>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="form-progress" id="formProgress">
+      <div class="progress-step active" data-step="1"></div>
+      <div class="progress-step" data-step="2"></div>
+      <div class="progress-step" data-step="3"></div>
+      <div class="progress-step" data-step="4"></div>
+      <div class="progress-step" data-step="5"></div>
+      <div class="progress-step" data-step="6"></div>
+      <div class="progress-step" data-step="7"></div>
+      <div class="progress-step" data-step="8"></div>
+      <div class="progress-step" data-step="9"></div>
+    </div>
+
+    <form id="reportForm" class="report-form">
+
+      <!-- SECTION 1: Job Info -->
+      <div class="form-section active" data-section="1">
+        <div class="section-header">
+          <div class="section-num">Section 1 of 9</div>
+          <div class="section-title">Job Information</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Report Type</label>
+            <select class="form-select" name="report_type" required>
+              <option value="">Select type...</option>
+              <option value="Hull Inspection">Hull Inspection</option>
+              <option value="Dock Inspection">Dock Inspection</option>
+              <option value="Condition Survey">Condition Survey</option>
+              <option value="Cleaning Service">Cleaning Service</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date of Inspection</label>
+            <input type="date" class="form-input" name="inspection_date" required>
+          </div>
+          <div class="form-group form-span-2">
+            <label class="form-label">Job Location</label>
+            <input type="text" class="form-input" name="job_location" placeholder="Marina / Port name, City, State/Country" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Vessel Name</label>
+            <input type="text" class="form-input" name="vessel_name" placeholder="M/V Example" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Client Name</label>
+            <input type="text" class="form-input" name="client_name" placeholder="Full name" required>
+          </div>
+          <div class="form-group form-span-2">
+            <label class="form-label">Client Email (report will be sent here)</label>
+            <input type="email" class="form-input" name="client_email" placeholder="client@example.com" required>
+          </div>
+        </div>
+        <div class="form-nav">
+          <div></div>
+          <div class="form-nav-right">
+            <button type="button" class="btn-primary next-btn">Next: Vessel Details →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: Vessel Details -->
+      <div class="form-section" data-section="2">
+        <div class="section-header">
+          <div class="section-num">Section 2 of 9</div>
+          <div class="section-title">Vessel Details</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Vessel Type</label>
+            <select class="form-select" name="vessel_type">
+              <option value="">Select type...</option>
+              <option>Motor Yacht</option>
+              <option>Sailboat</option>
+              <option>Commercial Vessel</option>
+              <option>Fishing Vessel</option>
+              <option>Military / Government</option>
+              <option>Personal Watercraft</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Year Built</label>
+            <input type="text" class="form-input" name="year_built" placeholder="e.g. 2015">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hull Material</label>
+            <select class="form-select" name="hull_material">
+              <option value="">Select material...</option>
+              <option>Fiberglass / GRP</option>
+              <option>Steel</option>
+              <option>Aluminum</option>
+              <option>Wood</option>
+              <option>Composite</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Vessel Length</label>
+            <div class="input-with-unit">
+              <input type="number" class="form-input" name="vessel_length" placeholder="e.g. 45">
+              <select class="form-select" name="length_unit">
+                <option value="ft">ft</option>
+                <option value="m">m</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form-nav">
+          <button type="button" class="btn-ghost prev-btn">← Back</button>
+          <div class="form-nav-right">
+            <button type="button" class="btn-primary next-btn">Next: Hull Condition →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: Hull Condition -->
+      <div class="form-section" data-section="3">
+        <div class="section-header">
+          <div class="section-num">Section 3 of 9</div>
+          <div class="section-title">Hull Condition</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Overall Hull Rating (1 = Poor, 5 = Excellent)</label>
+          <div class="rating-group">
+            <input type="radio" class="rating-option rating-1" name="hull_rating" value="1" id="r1">
+            <label class="rating-label" for="r1">1</label>
+            <input type="radio" class="rating-option rating-2" name="hull_rating" value="2" id="r2">
+            <label class="rating-label" for="r2">2</label>
+            <input type="radio" class="rating-option rating-3" name="hull_rating" value="3" id="r3">
+            <label class="rating-label" for="r3">3</label>
+            <input type="radio" class="rating-option rating-4" name="hull_rating" value="4" id="r4">
+            <label class="rating-label" for="r4">4</label>
+            <input type="radio" class="rating-option rating-5" name="hull_rating" value="5" id="r5">
+            <label class="rating-label" for="r5">5</label>
+          </div>
+        </div>
+
+        <div class="form-grid" style="margin-top:20px;">
+          <div class="form-group">
+            <label class="form-label">Marine Growth Coverage</label>
+            <select class="form-select" name="marine_growth_coverage">
+              <option value="">Select...</option>
+              <option>None</option>
+              <option>Light — &lt;25%</option>
+              <option>Moderate — 25–50%</option>
+              <option>Heavy — 50–75%</option>
+              <option>Severe — &gt;75%</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Marine Growth Type</label>
+            <select class="form-select" name="marine_growth_type">
+              <option value="">Select...</option>
+              <option>None</option>
+              <option>Algae / Slime</option>
+              <option>Barnacles</option>
+              <option>Mixed Growth</option>
+              <option>Oysters</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Antifouling Paint Condition</label>
+            <select class="form-select" name="antifouling_paint">
+              <option value="">Select...</option>
+              <option>Good</option>
+              <option>Fair</option>
+              <option>Poor</option>
+              <option>Bare — No Paint</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hull Damage</label>
+            <select class="form-select" name="hull_damage">
+              <option value="">Select...</option>
+              <option>None</option>
+              <option>Minor Osmotic Blistering</option>
+              <option>Major Blistering</option>
+              <option>Dents / Impact Damage</option>
+              <option>Cracks</option>
+              <option>Structural Damage</option>
+            </select>
+          </div>
+          <div class="form-group form-span-2">
+            <label class="form-label">Hull Condition Notes</label>
+            <textarea class="form-textarea" name="hull_notes" placeholder="Describe specific findings, locations, observations..."></textarea>
+          </div>
+        </div>
+        <div class="form-nav">
+          <button type="button" class="btn-ghost prev-btn">← Back</button>
+          <div class="form-nav-right">
+            <button type="button" class="btn-primary next-btn">Next: Running Gear →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: Running Gear -->
+      <div class="form-section" data-section="4">
+        <div class="section-header">
+          <div class="section-num">Section 4 of 9</div>
+          <div class="section-title">Running Gear</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Propeller Condition</label>
+            <select class="form-select" name="propeller_condition">
+              <option value="">Select...</option>
+              <option>Excellent</option>
+              <option>Good</option>
+              <option>Fair</option>
+              <option>Damaged</option>
+              <option>Missing</option>
+              <option>N/A</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Propeller Marine Growth</label>
+            <select class="form-select" name="propeller_growth">
+              <option value="">Select...</option>
+              <option>None</option>
+              <option>Light</option>
+              <option>Moderate</option>
+              <option>Heavy</option>
+              <option>N/A</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Shaft Condition</label>
+            <select class="form-select" name="shaft_condition">
+              <option value="">Select...</option>
+              <option>Good</option>
+              <option>Fair</option>
+              <option>Corroded</option>
+              <option>Bent</option>
+              <option>N/A</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Rudder Condition</label>
+            <select class="form-select" name="rudder_condition">
+              <option value="">Select...</option>
+              <option>Good</option>
+              <option>Fair</option>
+              <option>Damaged</option>
+              <option>N/A</option>
+            </select>
+          </div>
+          <div class="form-group form-span-2">
+            <label class="form-label">Running Gear Notes</label>
+            <textarea class="form-textarea" name="running_gear_notes" placeholder="Describe propeller pitch, shaft play, vibration, fouling details..."></textarea>
+          </div>
+        </div>
+        <div class="form-nav">
+          <button type="button" class="btn-ghost prev-btn">← Back</button>
+          <div class="form-nav-right">
+            <button type="button" class="btn-primary next-btn">Next: Anodes →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5: Anodes -->
+      <div class="form-section" data-section="5">
+        <div class="section-header">
+          <div class="section-num">Section 5 of 9</div>
+          <div class="section-title">Anodes (Sacrificial)</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Anode Condition</label>
+            <select class="form-select" name="anode_condition">
+              <option value="">Select...</option>
+              <option>New — &gt;75% Remaining</option>
+              <option>Good — 50–75% Remaining</option>
+              <option>Replace Soon — 25–50% Remaining</option>
+              <option>Critical — &lt;25% Remaining</option>
+              <option>Missing</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Anode Count Remaining</label>
+            <input type="number" class="form-input" name="anode_count" placeholder="e.g. 4" min="0">
+          </div>
+          <div class="form-group form-span-2">
+            <label class="form-label">Anode Notes</label>
+            <textarea class="form-textarea" name="anode_notes" placeholder="Location of missing or depleted anodes, material (zinc/aluminum/magnesium)..."></textarea>
+          </div>
+        </div>
+        <div class="form-nav">
+          <button type="button" class="btn-ghost prev-btn">← Back</button>
+          <div class="form-nav-right">
+            <button type="button" class="btn-primary next-btn">Next: Through-Hulls →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6: Through-Hulls -->
+      <div class="form-section" data-section="6">
+        <div class="section-header">
+          <div class="section-num">Section 6 of 9</div>
+          <div class="section-title">Through-Hulls &amp; Seacocks</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Overall Condition</label>
+            <select class="form-select" name="throughhull_condition">
+              <option value="">Select...</option>
+              <option>Good — All Seacocks Operable</option>
+              <option>Fair — Minor Corrosion</option>
+              <option>Poor — Significant Corrosion</option>
+              <option>Requires Immediate Attention</option>
+              <option>N/A — Unable to Inspect</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Number of Through-Hulls</label>
+            <input type="number" class="form-input" name="throughhull_count" placeholder="e.g. 6" min="0">
+          </div>
+          <div class="form-group form-span-2">
+            <label class="form-label">Through-Hull Notes</label>
+            <textarea class="form-textarea" name="throughhull_notes" placeholder="Identify any blocked, corroded, or inoperable seacocks by location..."></textarea>
+          </div>
+        </div>
+        <div class="form-nav">
+          <button type="button" class="btn-ghost prev-btn">← Back</button>
+          <div class="form-nav-right">
+            <button type="button" class="btn-primary next-btn">Next: Dive Conditions →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 7: Dive Conditions -->
+      <div class="form-section" data-section="7">
+        <div class="section-header">
+          <div class="section-num">Section 7 of 9</div>
+          <div class="section-title">Dive Conditions</div>
+        </div>
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label class="form-label">Underwater Visibility</label>
+            <select class="form-select" name="visibility">
+              <option value="">Select...</option>
+              <option>Excellent — &gt;30ft</option>
+              <option>Good — 15–30ft</option>
+              <option>Fair — 5–15ft</option>
+              <option>Poor — &lt;5ft</option>
+              <option>Zero / Black Water</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Water Depth</label>
+            <div class="input-with-unit">
+              <input type="number" class="form-input" name="water_depth" placeholder="e.g. 12">
+              <select class="form-select" name="depth_unit">
+                <option value="ft">ft</option>
+                <option value="m">m</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Water Temperature</label>
+            <div class="input-with-unit">
+              <input type="number" class="form-input" name="water_temp" placeholder="e.g. 72">
+              <select class="form-select" name="temp_unit">
+                <option value="°F">°F</option>
+                <option value="°C">°C</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group form-span-3">
+            <label class="form-label">Diver Notes</label>
+            <textarea class="form-textarea" name="dive_notes" placeholder="Current conditions, tidal state, any hazards observed..."></textarea>
+          </div>
+        </div>
+        <div class="form-nav">
+          <button type="button" class="btn-ghost prev-btn">← Back</button>
+          <div class="form-nav-right">
+            <button type="button" class="btn-primary next-btn">Next: Recommendations →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 8: Recommendations -->
+      <div class="form-section" data-section="8">
+        <div class="section-header">
+          <div class="section-num">Section 8 of 9</div>
+          <div class="section-title">Recommendations</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group form-span-2">
+            <label class="form-label">Action Priority</label>
+            <select class="form-select" name="action_priority">
+              <option value="">Select priority...</option>
+              <option>Immediate Action Required</option>
+              <option>Within 30 Days</option>
+              <option>Within 90 Days</option>
+              <option>Annual Maintenance</option>
+              <option>No Action Required</option>
+            </select>
+          </div>
+          <div class="form-group form-span-2">
+            <label class="form-label">Detailed Recommendations</label>
+            <textarea class="form-textarea" name="recommendations" style="min-height:140px;" placeholder="List specific repairs, cleaning, replacements, or follow-up inspections recommended..."></textarea>
+          </div>
+        </div>
+        <div class="form-nav">
+          <button type="button" class="btn-ghost prev-btn">← Back</button>
+          <div class="form-nav-right">
+            <button type="button" class="btn-primary next-btn">Next: Certification →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 9: Diver Certification -->
+      <div class="form-section" data-section="9">
+        <div class="section-header">
+          <div class="section-num">Section 9 of 9</div>
+          <div class="section-title">Diver Certification</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Diver Name</label>
+            <input type="text" class="form-input" name="diver_name" id="diverNameField" placeholder="Auto-filled from profile">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Certification Agency</label>
+            <select class="form-select" name="cert_agency">
+              <option value="">Select agency...</option>
+              <option>PADI</option>
+              <option>NAUI</option>
+              <option>SSI</option>
+              <option>SDI / TDI</option>
+              <option>BSAC</option>
+              <option>CMAS</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Certification Number</label>
+            <input type="text" class="form-input" name="cert_number" id="certNumberField" placeholder="Auto-filled from profile">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hero Divers Member ID</label>
+            <input type="text" class="form-input" name="hero_member_id" placeholder="HD-XXXXX">
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <button type="button" class="btn-ghost prev-btn">← Back</button>
+          <div class="form-nav-right">
+            <button type="button" class="btn-ghost" id="saveDraftBtn">Save Draft</button>
+            <button type="button" class="btn-primary" id="saveAndSendBtn">Save &amp; Send to Client →</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+    <div id="formFeedback" style="margin-top:16px;"></div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module">
+  import { requireAuth, getProfile, signOut } from './auth.js';
+  import { supabase } from './supabase-client.js';
+
+  const TOTAL_SECTIONS = 9;
+  let currentSection = 1;
+  let session = null;
+
+  function toast(msg, type = 'info') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = `toast toast-${type}`;
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 5000);
+  }
+
+  function updateProgress() {
+    document.querySelectorAll('.progress-step').forEach((step, i) => {
+      const n = i + 1;
+      step.classList.remove('active', 'done');
+      if (n === currentSection) step.classList.add('active');
+      else if (n < currentSection) step.classList.add('done');
+    });
+  }
+
+  function showSection(n) {
+    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+    document.querySelector(`.form-section[data-section="${n}"]`).classList.add('active');
+    currentSection = n;
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function collectFormData() {
+    const data = {};
+    document.querySelectorAll('#reportForm [name]').forEach(el => {
+      data[el.name] = el.value;
+    });
+    return data;
+  }
+
+  async function saveReport(status) {
+    const formData = collectFormData();
+    const payload = {
+      diver_id: session.user.id,
+      status,
+      report_type: formData.report_type,
+      client_name: formData.client_name,
+      client_email: formData.client_email,
+      vessel_name: formData.vessel_name,
+      job_location: formData.job_location,
+      report_data: formData
+    };
+
+    const { data, error } = await supabase.from('reports').insert([payload]).select().single();
+    if (error) throw error;
+    return data;
+  }
+
+  async function init() {
+    session = await requireAuth();
+    if (!session) return;
+
+    // Set today's date
+    document.querySelector('[name="inspection_date"]').value = new Date().toISOString().split('T')[0];
+
+    // Auto-fill diver profile
+    const profile = await getProfile(session.user.id);
+    if (profile) {
+      if (profile.full_name) document.getElementById('diverNameField').value = profile.full_name;
+      if (profile.cert_number) document.getElementById('certNumberField').value = profile.cert_number;
+      if (profile.cert_agency) {
+        const sel = document.querySelector('[name="cert_agency"]');
+        [...sel.options].forEach(o => { if (o.value === profile.cert_agency) o.selected = true; });
+      }
+    }
+
+    // Navigation buttons
+    document.querySelectorAll('.next-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (currentSection < TOTAL_SECTIONS) showSection(currentSection + 1);
+      });
+    });
+
+    document.querySelectorAll('.prev-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (currentSection > 1) showSection(currentSection - 1);
+      });
+    });
+
+    // Save draft
+    document.getElementById('saveDraftBtn').addEventListener('click', async () => {
+      try {
+        const report = await saveReport('draft');
+        toast('Report saved as draft', 'success');
+        setTimeout(() => window.location.href = `report-view.html?id=${report.id}`, 1500);
+      } catch (e) {
+        toast('Error saving report: ' + e.message, 'error');
+      }
+    });
+
+    // Save and send
+    document.getElementById('saveAndSendBtn').addEventListener('click', async () => {
+      const clientEmail = document.querySelector('[name="client_email"]').value;
+      if (!clientEmail) {
+        toast('Please enter a client email in Section 1', 'error');
+        showSection(1);
+        return;
+      }
+
+      const btn = document.getElementById('saveAndSendBtn');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      try {
+        const report = await saveReport('draft');
+        const formData = collectFormData();
+        const profile = await getProfile(session.user.id);
+
+        // Call Netlify function to send email
+        const res = await fetch('/.netlify/functions/send-report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            reportId: report.id,
+            reportData: formData,
+            clientEmail: formData.client_email,
+            clientName: formData.client_name,
+            vesselName: formData.vessel_name,
+            diverName: profile?.full_name || formData.diver_name
+          })
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || 'Send failed');
+        }
+
+        toast('Report sent to ' + formData.client_email, 'success');
+        setTimeout(() => window.location.href = `report-view.html?id=${report.id}`, 2000);
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Save & Send to Client →';
+      }
+    });
+  }
+
+  document.getElementById('signOutBtn').addEventListener('click', signOut);
+  document.getElementById('sidebarSignOut').addEventListener('click', (e) => { e.preventDefault(); signOut(); });
+
+  init();
+</script>
+<script src="main.js"></script>
+</body>
+</html>
