@@ -528,12 +528,13 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script type="module">
-  import { requireAuth, getProfile, signOut } from './auth.js';
+  import { requireRole, getProfile, signOut } from './auth.js';
   import { supabase } from './supabase-client.js';
 
   const TOTAL_SECTIONS = 9;
   let currentSection = 1;
   let session = null;
+  let activeJobId = null; // set if launched from a job
 
   function toast(msg, type = 'info') {
     const c = document.getElementById('toastContainer');
@@ -588,14 +589,34 @@
   }
 
   async function init() {
-    session = await requireAuth();
-    if (!session) return;
+    const result = await requireRole('diver');
+    if (!result) return;
+    session = result.session;
+    const profile = result.profile;
 
     // Set today's date
     document.querySelector('[name="inspection_date"]').value = new Date().toISOString().split('T')[0];
 
+    // Pre-fill from job if ?jobId is in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    activeJobId = urlParams.get('jobId');
+    if (activeJobId) {
+      const { data: job } = await supabase.from('jobs').select('*').eq('id', activeJobId).eq('diver_id', session.user.id).maybeSingle();
+      if (job) {
+        if (job.vessel_name) document.querySelector('[name="vessel_name"]').value = job.vessel_name;
+        if (job.job_location) document.querySelector('[name="job_location"]').value = job.job_location;
+        if (job.vessel_type) {
+          const vtSel = document.querySelector('[name="vessel_type"]');
+          if (vtSel) [...vtSel.options].forEach(o => { if (o.value === job.vessel_type || o.text === job.vessel_type) o.selected = true; });
+        }
+        if (job.job_type) {
+          const rtSel = document.querySelector('[name="report_type"]');
+          if (rtSel) [...rtSel.options].forEach(o => { if (o.value === job.job_type || o.text === job.job_type) o.selected = true; });
+        }
+      }
+    }
+
     // Auto-fill diver profile
-    const profile = await getProfile(session.user.id);
     if (profile) {
       if (profile.full_name) document.getElementById('diverNameField').value = profile.full_name;
       if (profile.cert_number) document.getElementById('certNumberField').value = profile.cert_number;
@@ -664,6 +685,30 @@
         if (!res.ok) {
           const err = await res.json();
           throw new Error(err.error || 'Send failed');
+        }
+
+        // If this report is linked to a job, mark the job complete
+        if (activeJobId) {
+          await supabase.from('jobs').update({
+            status: 'complete',
+            completed_at: new Date().toISOString(),
+            report_id: report.id
+          }).eq('id', activeJobId).eq('diver_id', session.user.id);
+
+          // Trigger payout notification to admin
+          await fetch('/.netlify/functions/notify-divers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'job_complete_payout',
+              jobId: activeJobId,
+              diverName: profile?.full_name || 'Diver',
+              diverEmail: session.user.email,
+              jobType: formData.report_type,
+              vesselName: formData.vessel_name,
+              priceFormatted: '—'
+            })
+          }).catch(() => {});
         }
 
         toast('Report sent to ' + formData.client_email, 'success');

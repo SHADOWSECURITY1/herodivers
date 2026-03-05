@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diver Portal — HERO Diving & Marine Services</title>
+<title>Sign In — Hero Divers Portal</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -42,7 +42,7 @@
     <div class="login-logo">
       <img src="logo.png" alt="Hero Diving">
     </div>
-    <div class="login-portal-tag">Diver Portal</div>
+    <div class="login-portal-tag">Hero Divers Portal</div>
     <div class="login-title">Sign In</div>
 
     <div class="form-error" id="loginError"></div>
@@ -60,8 +60,9 @@
       <button type="submit" class="btn-primary" id="loginBtn" style="width:100%;">Sign In</button>
     </form>
 
-    <div class="login-footer" style="margin-top:16px;">
+    <div class="login-footer" style="margin-top:16px; display:flex; justify-content:space-between;">
       <a href="#" id="forgotLink">Forgot Password?</a>
+      <a href="signup.html">Create Account</a>
     </div>
 
     <!-- Forgot password panel -->
@@ -78,12 +79,15 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script type="module">
-  import { signIn, resetPassword } from './auth.js';
+  import { signIn, resetPassword, getProfile, getRoleRedirect } from './auth.js';
   import { supabase } from './supabase-client.js';
 
-  // If already logged in, redirect to dashboard
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    if (session) window.location.href = '/dashboard.html';
+  // If already logged in, redirect to role-appropriate dashboard
+  supabase.auth.getSession().then(async ({ data: { session } }) => {
+    if (session) {
+      const profile = await getProfile(session.user.id);
+      window.location.href = getRoleRedirect(profile?.role);
+    }
   });
 
   const form = document.getElementById('loginForm');
@@ -107,7 +111,9 @@
       btn.disabled = false;
       btn.textContent = 'Sign In';
     } else {
-      window.location.href = '/dashboard.html';
+      const { data: { session } } = await supabase.auth.getSession();
+      const profile = await getProfile(session.user.id);
+      window.location.href = getRoleRedirect(profile?.role);
     }
   });
 

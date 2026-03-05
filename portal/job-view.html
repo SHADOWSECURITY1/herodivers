@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Details — Hero Divers Portal</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<script>
+  window.__SUPABASE_URL__ = 'https://wrqecnvtbqgoezvslrhm.supabase.co';
+  window.__SUPABASE_ANON_KEY__ = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndycWVjbnZ0YnFnb2V6dnNscmhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NTYyMDQsImV4cCI6MjA4ODIzMjIwNH0.t-v9QmDg_mseob-CRK7M9IwcXZAjoW8NMH6Gz2g80Ts';
+</script>
+
+<nav id="mainNav">
+  <a href="https://herodivingandmarine.com" class="nav-brand">
+    <img src="logo.png" class="bottlecap-logo" style="height:48px;" alt="Hero Diving">
+    <span class="nav-brand-text">
+      <span class="nav-brand-name">Hero</span>
+      <span class="nav-brand-sub">Diver Portal</span>
+    </span>
+  </a>
+  <ul class="nav-links">
+    <li id="navDashLink"><a href="dashboard.html">Dashboard</a></li>
+    <li><button class="nav-sign-out" id="signOutBtn">Sign Out</button></li>
+  </ul>
+</nav>
+
+<div class="portal-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navigation</div>
+      <a href="#" class="sidebar-link" id="sidebarDash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a href="#" class="sidebar-link" id="sidebarSignOut">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <main class="portal-main">
+    <div id="jobContent">
+      <div class="empty-state" style="padding:80px 0;">Loading job...</div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module">
+  import { requireAuth, signOut } from './auth.js';
+  import { supabase } from './supabase-client.js';
+
+  const STEPS = [
+    { key: 'pending_payment', label: 'Payment\nPending' },
+    { key: 'open', label: 'Finding\nDiver' },
+    { key: 'accepted', label: 'Diver\nAssigned' },
+    { key: 'in_progress', label: 'In\nProgress' },
+    { key: 'complete', label: 'Complete' }
+  ];
+
+  function toast(msg, type = 'info') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = `toast toast-${type}`;
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+  }
+
+  function fmt(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  function fmtPrice(cents) {
+    return '$' + Math.round((cents || 0) / 100);
+  }
+
+  function buildStepper(currentStatus) {
+    const activeIdx = STEPS.findIndex(s => s.key === currentStatus);
+    if (currentStatus === 'cancelled') {
+      return `<div style="display:inline-block; padding:8px 20px; background:rgba(232,39,44,0.1); border:1px solid rgba(232,39,44,0.3); color:var(--signal-red); font-family:'Barlow Condensed',sans-serif; letter-spacing:3px; text-transform:uppercase; font-size:12px;">Job Cancelled</div>`;
+    }
+    return `<div class="status-stepper">
+      ${STEPS.map((step, i) => {
+        const isDone = i < activeIdx;
+        const isActive = i === activeIdx;
+        return `<div class="stepper-step ${isDone ? 'done' : isActive ? 'active' : ''}">
+          <div class="stepper-dot">${isDone ? '✓' : i + 1}</div>
+          <div class="stepper-label">${step.label.replace('\n', '<br>')}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  function field(label, value) {
+    return `<div class="report-field">
+      <div class="report-field-label">${label}</div>
+      <div class="report-field-value">${value || '—'}</div>
+    </div>`;
+  }
+
+  async function renderJob(job, userRole, userId) {
+    const isOwner = job.vessel_owner_id === userId;
+    const isDiver = job.diver_id === userId;
+
+    // Fetch diver name if accepted
+    let diverName = null;
+    if (job.diver_id && isOwner) {
+      const { data: diverProfile } = await supabase.from('profiles').select('full_name').eq('id', job.diver_id).single();
+      diverName = diverProfile?.full_name;
+    }
+
+    const backLink = isOwner ? 'vessel-dashboard.html' : 'job-board.html';
+    const dateStr = job.scheduled_date
+      ? new Date(job.scheduled_date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
+      : '—';
+
+    document.getElementById('jobContent').innerHTML = `
+      <div class="page-header">
+        <div class="page-tag">${job.job_type || 'Job'}</div>
+        <h1 class="page-title">${job.vessel_name || 'Unnamed Vessel'}</h1>
+        <p class="page-subtitle">${job.job_location || ''}</p>
+      </div>
+
+      <!-- Status stepper -->
+      ${buildStepper(job.status)}
+
+      <!-- Actions bar -->
+      <div class="report-actions" style="margin-bottom:32px;">
+        <a href="${backLink}" class="btn-ghost">← Back</a>
+        ${isOwner && job.status === 'pending_payment' ? `<button class="btn-primary" id="payBtn">Complete Payment →</button>` : ''}
+        ${isDiver && job.status === 'accepted' ? `<button class="btn-ghost" id="startBtn">Mark In Progress</button>` : ''}
+        ${isDiver && job.status === 'in_progress' ? `<a href="new-report.html?jobId=${job.id}" class="btn-primary">Submit Report →</a>` : ''}
+        ${isOwner && job.status === 'complete' && job.report_id ? `<a href="report-view.html?id=${job.report_id}" class="btn-primary">View Report →</a>` : ''}
+      </div>
+
+      <!-- Job meta -->
+      <div class="report-meta">
+        ${field('Status', `<span class="badge badge-${job.status}">${job.status.replace(/_/g, ' ')}</span>`)}
+        ${field('Job Type', job.job_type)}
+        ${field('Vessel Type', job.vessel_type)}
+        ${field('Vessel Length', job.vessel_length)}
+        ${field('Location', job.job_location)}
+        ${field('Preferred Date', dateStr)}
+        ${field('Rate', fmtPrice(job.price_cents))}
+        ${isOwner && diverName ? field('Diver Assigned', `<strong style="color:var(--cyan);">${diverName}</strong>`) : ''}
+      </div>
+
+      ${job.description ? `
+        <div class="report-section" style="margin-top:24px;">
+          <div class="report-section-title">Special Instructions</div>
+          <div style="padding:20px; color:var(--fog); font-size:14px; line-height:1.7;">${job.description}</div>
+        </div>` : ''}
+    `;
+
+    // Pay button handler (vessel owner)
+    const payBtn = document.getElementById('payBtn');
+    if (payBtn) {
+      payBtn.addEventListener('click', async () => {
+        payBtn.disabled = true;
+        payBtn.textContent = 'Redirecting...';
+        try {
+          const res = await fetch('/.netlify/functions/create-checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              jobId: job.id,
+              priceInCents: job.price_cents,
+              vesselName: job.vessel_name,
+              jobType: job.job_type,
+              userId
+            })
+          });
+          const { url, error } = await res.json();
+          if (error) throw new Error(error);
+          window.location.href = url;
+        } catch (e) {
+          toast('Payment error: ' + e.message, 'error');
+          payBtn.disabled = false;
+          payBtn.textContent = 'Complete Payment →';
+        }
+      });
+    }
+
+    // Start job button handler (diver)
+    const startBtn = document.getElementById('startBtn');
+    if (startBtn) {
+      startBtn.addEventListener('click', async () => {
+        startBtn.disabled = true;
+        const { error } = await supabase.from('jobs').update({ status: 'in_progress' }).eq('id', job.id).eq('diver_id', userId);
+        if (error) {
+          toast('Failed: ' + error.message, 'error');
+          startBtn.disabled = false;
+        } else {
+          toast('Job marked as in progress', 'success');
+          setTimeout(() => location.reload(), 1500);
+        }
+      });
+    }
+  }
+
+  async function init() {
+    const result = await requireAuth();
+    if (!result) return;
+    const { session, profile } = result;
+    const userId = session.user.id;
+    const userRole = profile?.role;
+
+    // Set sidebar/nav links based on role
+    const dashUrl = userRole === 'vessel_owner' ? 'vessel-dashboard.html' : userRole === 'admin' ? 'admin.html' : 'dashboard.html';
+    document.getElementById('sidebarDash').href = dashUrl;
+    document.getElementById('navDashLink').querySelector('a').href = dashUrl;
+
+    const params = new URLSearchParams(window.location.search);
+    const jobId = params.get('id');
+    if (!jobId) { window.location.href = dashUrl; return; }
+
+    const { data: job, error } = await supabase
+      .from('jobs')
+      .select('*')
+      .eq('id', jobId)
+      .single();
+
+    if (error || !job) {
+      document.getElementById('jobContent').innerHTML = '<div class="empty-state" style="padding:80px 0;">Job not found.</div>';
+      return;
+    }
+
+    // Verify access: must be vessel owner, assigned diver, or admin
+    const hasAccess = job.vessel_owner_id === userId || job.diver_id === userId || userRole === 'admin';
+    if (!hasAccess) {
+      document.getElementById('jobContent').innerHTML = '<div class="empty-state" style="padding:80px 0;">Access denied.</div>';
+      return;
+    }
+
+    renderJob(job, userRole, userId);
+  }
+
+  document.getElementById('signOutBtn').addEventListener('click', signOut);
+  document.getElementById('sidebarSignOut').addEventListener('click', (e) => { e.preventDefault(); signOut(); });
+
+  init();
+</script>
+<script src="main.js"></script>
+</body>
+</html>

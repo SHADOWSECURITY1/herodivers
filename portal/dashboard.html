@@ -38,6 +38,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
         Dashboard
       </a>
+      <a href="job-board.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Job Board
+      </a>
       <a href="new-report.html" class="sidebar-link">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
         New Report
@@ -83,12 +87,30 @@
         <div class="stat-label">Drafts</div>
         <div class="stat-value red" id="statDraft">—</div>
       </div>
+      <div class="stat-card">
+        <div class="stat-label">Available Jobs</div>
+        <div class="stat-value cyan" id="statJobs">—</div>
+      </div>
+    </div>
+
+    <!-- Active job banner -->
+    <div id="activeJobBanner" class="active-job-banner" style="display:none;">
+      <div>
+        <div class="active-job-banner-label">Active Job</div>
+        <div class="active-job-banner-vessel" id="activeJobVessel">—</div>
+        <div class="active-job-banner-meta" id="activeJobMeta">—</div>
+      </div>
+      <div class="active-job-banner-actions">
+        <a id="activeJobViewLink" href="#" class="btn-ghost" style="font-size:13px; padding:10px 20px;">View Job</a>
+        <a id="activeJobReportLink" href="#" class="btn-primary" style="font-size:13px; padding:10px 20px;">Submit Report →</a>
+      </div>
     </div>
 
     <!-- Quick actions -->
     <div class="quick-actions reveal reveal-delay-1">
       <a href="new-report.html" class="btn-primary">+ New Inspection Report</a>
-      <a href="reports.html" class="btn-ghost">View All Reports</a>
+      <a href="job-board.html" class="btn-ghost">View Job Board</a>
+      <a href="reports.html" class="btn-ghost">All Reports</a>
     </div>
 
     <!-- Recent reports -->
@@ -119,7 +141,7 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script type="module">
-  import { requireAuth, getProfile, signOut } from './auth.js';
+  import { requireRole, signOut } from './auth.js';
   import { supabase } from './supabase-client.js';
 
   function toast(msg, type = 'info') {
@@ -136,23 +158,27 @@
   }
 
   async function init() {
-    const session = await requireAuth();
-    if (!session) return;
+    const result = await requireRole('diver');
+    if (!result) return;
+    const { session, profile } = result;
 
-    // Load profile
-    const profile = await getProfile(session.user.id);
     if (profile?.full_name) {
       document.getElementById('diverName').textContent = profile.full_name.split(' ')[0];
     }
 
-    // Load reports
-    const { data: reports, error } = await supabase
-      .from('reports')
-      .select('id, created_at, vessel_name, client_name, report_type, status')
-      .eq('diver_id', session.user.id)
-      .order('created_at', { ascending: false });
+    // Handle accepted job toast
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('accepted') === '1') toast('Job accepted! Get ready to dive.', 'success');
 
-    if (error) { toast('Failed to load reports', 'error'); return; }
+    // Load reports and active job in parallel
+    const [reportsResult, activeJobResult, openJobsResult] = await Promise.all([
+      supabase.from('reports').select('id, created_at, vessel_name, client_name, report_type, status').eq('diver_id', session.user.id).order('created_at', { ascending: false }),
+      supabase.from('jobs').select('*').eq('diver_id', session.user.id).in('status', ['accepted', 'in_progress']).maybeSingle(),
+      supabase.from('jobs').select('id', { count: 'exact' }).eq('status', 'open')
+    ]);
+
+    const reports = reportsResult.data || [];
+    if (reportsResult.error) { toast('Failed to load reports', 'error'); return; }
 
     // Stats
     const now = new Date();
@@ -164,6 +190,17 @@
     document.getElementById('statMonth').textContent = thisMonth.length;
     document.getElementById('statSent').textContent = sent.length;
     document.getElementById('statDraft').textContent = drafts.length;
+    document.getElementById('statJobs').textContent = openJobsResult.count ?? '—';
+
+    // Active job banner
+    const activeJob = activeJobResult.data;
+    if (activeJob) {
+      document.getElementById('activeJobBanner').style.display = 'flex';
+      document.getElementById('activeJobVessel').textContent = `${activeJob.job_type || 'Inspection'} — ${activeJob.vessel_name || 'Unknown Vessel'}`;
+      document.getElementById('activeJobMeta').textContent = `${activeJob.job_location || ''} · ${activeJob.status === 'in_progress' ? 'In Progress' : 'Accepted — Ready to Start'}`;
+      document.getElementById('activeJobViewLink').href = `job-view.html?id=${activeJob.id}`;
+      document.getElementById('activeJobReportLink').href = `new-report.html?jobId=${activeJob.id}`;
+    }
 
     // Recent reports table
     const tbody = document.getElementById('recentReportsBody');

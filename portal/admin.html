@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Hero Divers Portal</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<script>
+  window.__SUPABASE_URL__ = 'https://wrqecnvtbqgoezvslrhm.supabase.co';
+  window.__SUPABASE_ANON_KEY__ = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndycWVjbnZ0YnFnb2V6dnNscmhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NTYyMDQsImV4cCI6MjA4ODIzMjIwNH0.t-v9QmDg_mseob-CRK7M9IwcXZAjoW8NMH6Gz2g80Ts';
+</script>
+
+<nav id="mainNav">
+  <a href="https://herodivingandmarine.com" class="nav-brand">
+    <img src="logo.png" class="bottlecap-logo" style="height:48px;" alt="Hero Diving">
+    <span class="nav-brand-text">
+      <span class="nav-brand-name">Hero</span>
+      <span class="nav-brand-sub">Admin</span>
+    </span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="admin.html" class="active">Admin</a></li>
+    <li><button class="nav-sign-out" id="signOutBtn">Sign Out</button></li>
+  </ul>
+</nav>
+
+<div class="portal-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Admin</div>
+      <a href="#section-applications" class="sidebar-link" id="linkApps">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Applications
+        <span id="pendingBadge" style="margin-left:auto; background:var(--signal-red); color:white; font-size:10px; padding:1px 7px; border-radius:10px; display:none;"></span>
+      </a>
+      <a href="#section-jobs" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        All Jobs
+      </a>
+      <a href="#section-revenue" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Revenue
+      </a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a href="#" class="sidebar-link" id="sidebarSignOut">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <main class="portal-main">
+    <div class="page-header">
+      <div class="page-tag">Admin</div>
+      <h1 class="page-title">Hero Divers <span style="color:var(--cyan);">Dashboard</span></h1>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid reveal">
+      <div class="stat-card">
+        <div class="stat-label">Pending Applications</div>
+        <div class="stat-value red" id="statPending">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Active Jobs</div>
+        <div class="stat-value cyan" id="statActive">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Approved Divers</div>
+        <div class="stat-value" id="statDivers">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Revenue MTD</div>
+        <div class="stat-value" id="statRevenueMTD">—</div>
+      </div>
+    </div>
+
+    <!-- Diver Applications -->
+    <div id="section-applications" class="table-wrap reveal reveal-delay-1">
+      <div class="table-header">
+        <span class="table-title">Diver Applications</span>
+        <select id="filterApps" class="form-select" style="width:160px; font-size:12px; padding:6px 10px;">
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+          <option value="">All</option>
+        </select>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Applied</th><th>Name</th><th>Email</th><th>Location</th><th>Cert Agency</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="appsBody">
+          <tr><td colspan="7" class="empty-state">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- All Jobs -->
+    <div id="section-jobs" class="table-wrap reveal reveal-delay-2">
+      <div class="table-header">
+        <span class="table-title">All Jobs</span>
+        <select id="filterJobs" class="form-select" style="width:180px; font-size:12px; padding:6px 10px;">
+          <option value="">All Statuses</option>
+          <option value="pending_payment">Pending Payment</option>
+          <option value="open">Open</option>
+          <option value="accepted">Accepted</option>
+          <option value="in_progress">In Progress</option>
+          <option value="complete">Complete</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Vessel Owner</th><th>Vessel</th><th>Type</th><th>Location</th><th>Diver</th><th>Status</th><th>Price</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="jobsBody">
+          <tr><td colspan="9" class="empty-state">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Revenue -->
+    <div id="section-revenue" class="stats-grid reveal reveal-delay-3" style="margin-top:0;">
+      <div class="stat-card">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value" id="statRevenueTotal">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Hero Take (20%)</div>
+        <div class="stat-value cyan" id="statHeroTake">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Diver Payouts (80%)</div>
+        <div class="stat-value" id="statDiverPayout">—</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module">
+  import { requireRole, signOut } from './auth.js';
+  import { supabase } from './supabase-client.js';
+
+  let accessToken = null;
+  let allApps = [];
+  let allJobs = [];
+
+  function toast(msg, type = 'info') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = `toast toast-${type}`;
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+  }
+
+  function fmt(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function fmtPrice(cents) {
+    if (!cents) return '—';
+    return '$' + Math.round(cents / 100);
+  }
+
+  async function adminAction(body) {
+    const res = await fetch('/.netlify/functions/admin-action', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      },
+      body: JSON.stringify(body)
+    });
+    return res.json();
+  }
+
+  function renderApps(apps) {
+    const tbody = document.getElementById('appsBody');
+    if (!apps.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No applications</td></tr>';
+      return;
+    }
+    tbody.innerHTML = apps.map(a => `
+      <tr id="app-${a.id}">
+        <td>${fmt(a.created_at)}</td>
+        <td>${a.full_name || '—'}</td>
+        <td style="font-size:12px;">${a.email || '—'}</td>
+        <td>${a.location || '—'}</td>
+        <td>${a.cert_agency || '—'}</td>
+        <td><span class="badge badge-${a.status === 'pending' ? 'open' : a.status === 'approved' ? 'complete' : 'cancelled'}">${a.status}</span></td>
+        <td class="table-actions">
+          ${a.status === 'pending' ? `
+            <button class="table-btn send approve-btn" data-id="${a.id}" data-user="${a.user_id}" data-email="${a.email || ''}" data-name="${a.full_name || ''}">Approve</button>
+            <button class="table-btn reject-btn" data-id="${a.id}" data-email="${a.email || ''}" data-name="${a.full_name || ''}">Reject</button>
+          ` : '—'}
+        </td>
+      </tr>
+    `).join('');
+
+    document.querySelectorAll('.approve-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm(`Approve ${btn.dataset.name}?`)) return;
+        btn.disabled = true; btn.textContent = 'Approving...';
+        const res = await adminAction({ action: 'approve_diver', applicationId: btn.dataset.id, userId: btn.dataset.user, diverEmail: btn.dataset.email, diverName: btn.dataset.name });
+        if (res.success) { toast('Diver approved — welcome email sent', 'success'); document.getElementById(`app-${btn.dataset.id}`)?.remove(); }
+        else { toast('Error: ' + res.error, 'error'); btn.disabled = false; btn.textContent = 'Approve'; }
+      });
+    });
+
+    document.querySelectorAll('.reject-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm(`Reject ${btn.dataset.name}?`)) return;
+        btn.disabled = true; btn.textContent = 'Rejecting...';
+        const res = await adminAction({ action: 'reject_diver', applicationId: btn.dataset.id, diverEmail: btn.dataset.email, diverName: btn.dataset.name });
+        if (res.success) { toast('Application rejected', 'info'); document.getElementById(`app-${btn.dataset.id}`)?.remove(); }
+        else { toast('Error: ' + res.error, 'error'); btn.disabled = false; btn.textContent = 'Reject'; }
+      });
+    });
+  }
+
+  function renderJobs(jobs) {
+    const tbody = document.getElementById('jobsBody');
+    if (!jobs.length) {
+      tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No jobs</td></tr>';
+      return;
+    }
+    tbody.innerHTML = jobs.map(j => `
+      <tr>
+        <td>${fmt(j.created_at)}</td>
+        <td style="font-size:12px;">${j['profiles!jobs_vessel_owner_id_fkey']?.full_name || '—'}</td>
+        <td>${j.vessel_name || '—'}</td>
+        <td style="font-size:12px;">${j.job_type || '—'}</td>
+        <td style="font-size:12px;">${j.job_location || '—'}</td>
+        <td style="font-size:12px;">${j['profiles!jobs_diver_id_fkey']?.full_name || '—'}</td>
+        <td><span class="badge badge-${j.status}">${j.status.replace(/_/g, ' ')}</span></td>
+        <td>${fmtPrice(j.price_cents)}</td>
+        <td class="table-actions">
+          <a href="job-view.html?id=${j.id}" class="table-btn">View</a>
+          ${!['complete','cancelled'].includes(j.status) ? `<button class="table-btn cancel-job-btn" data-id="${j.id}">Cancel</button>` : ''}
+        </td>
+      </tr>
+    `).join('');
+
+    document.querySelectorAll('.cancel-job-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Cancel this job?')) return;
+        btn.disabled = true;
+        const res = await adminAction({ action: 'cancel_job', jobId: btn.dataset.id });
+        if (res.success) { toast('Job cancelled', 'info'); setTimeout(() => location.reload(), 1000); }
+        else { toast('Error: ' + res.error, 'error'); btn.disabled = false; }
+      });
+    });
+  }
+
+  async function init() {
+    const result = await requireRole('admin');
+    if (!result) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    accessToken = session.access_token;
+
+    // Load stats
+    const stats = await adminAction({ action: 'get_admin_stats' });
+    document.getElementById('statPending').textContent = stats.pendingApplications ?? '—';
+    document.getElementById('statActive').textContent = stats.activeJobs ?? '—';
+    document.getElementById('statDivers').textContent = stats.approvedDivers ?? '—';
+    document.getElementById('statRevenueMTD').textContent = stats.revenueMTD ? '$' + Math.round(stats.revenueMTD / 100) : '$0';
+    document.getElementById('statRevenueTotal').textContent = stats.revenueTotal ? '$' + Math.round(stats.revenueTotal / 100) : '$0';
+    document.getElementById('statHeroTake').textContent = stats.revenueTotal ? '$' + Math.round(stats.revenueTotal * 0.20 / 100) : '$0';
+    document.getElementById('statDiverPayout').textContent = stats.revenueTotal ? '$' + Math.round(stats.revenueTotal * 0.80 / 100) : '$0';
+
+    // Show pending badge
+    if (stats.pendingApplications > 0) {
+      const badge = document.getElementById('pendingBadge');
+      badge.textContent = stats.pendingApplications;
+      badge.style.display = 'inline-block';
+    }
+
+    // Load applications
+    allApps = await adminAction({ action: 'get_applications' });
+    const filterApps = document.getElementById('filterApps');
+    const applyAppFilter = () => {
+      const f = filterApps.value;
+      renderApps(f ? allApps.filter(a => a.status === f) : allApps);
+    };
+    applyAppFilter();
+    filterApps.addEventListener('change', applyAppFilter);
+
+    // Load jobs
+    allJobs = await adminAction({ action: 'get_all_jobs' });
+    const filterJobs = document.getElementById('filterJobs');
+    const applyJobFilter = () => {
+      const f = filterJobs.value;
+      renderJobs(f ? allJobs.filter(j => j.status === f) : allJobs);
+    };
+    applyJobFilter();
+    filterJobs.addEventListener('change', applyJobFilter);
+  }
+
+  document.getElementById('signOutBtn').addEventListener('click', signOut);
+  document.getElementById('sidebarSignOut').addEventListener('click', (e) => { e.preventDefault(); signOut(); });
+
+  init();
+</script>
+<script src="main.js"></script>
+</body>
+</html>

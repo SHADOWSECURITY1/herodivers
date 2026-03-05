@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Hero Vessel Portal</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<script>
+  window.__SUPABASE_URL__ = 'https://wrqecnvtbqgoezvslrhm.supabase.co';
+  window.__SUPABASE_ANON_KEY__ = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndycWVjbnZ0YnFnb2V6dnNscmhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NTYyMDQsImV4cCI6MjA4ODIzMjIwNH0.t-v9QmDg_mseob-CRK7M9IwcXZAjoW8NMH6Gz2g80Ts';
+</script>
+
+<nav id="mainNav">
+  <a href="https://herodivingandmarine.com" class="nav-brand">
+    <img src="logo.png" class="bottlecap-logo" style="height:48px;" alt="Hero Diving">
+    <span class="nav-brand-text">
+      <span class="nav-brand-name">Hero</span>
+      <span class="nav-brand-sub">Vessel Portal</span>
+    </span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="vessel-dashboard.html" class="active">Dashboard</a></li>
+    <li><a href="request-job.html" class="nav-cta">Request Inspection</a></li>
+    <li><button class="nav-sign-out" id="signOutBtn">Sign Out</button></li>
+  </ul>
+</nav>
+
+<div class="portal-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navigation</div>
+      <a href="vessel-dashboard.html" class="sidebar-link active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="request-job.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Request Inspection
+      </a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a href="#" class="sidebar-link" id="sidebarSignOut">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <main class="portal-main">
+    <div class="page-header">
+      <div class="page-tag">Vessel Owner</div>
+      <h1 class="page-title">Welcome Back, <span id="ownerName" style="color:var(--cyan);">Captain</span></h1>
+      <p class="page-subtitle">Your Hero Divers inspection dashboard</p>
+    </div>
+
+    <div class="stats-grid reveal">
+      <div class="stat-card">
+        <div class="stat-label">Open Jobs</div>
+        <div class="stat-value cyan" id="statOpen">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Active Jobs</div>
+        <div class="stat-value" id="statActive">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Completed</div>
+        <div class="stat-value" id="statComplete">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Spent</div>
+        <div class="stat-value" id="statSpent">—</div>
+      </div>
+    </div>
+
+    <div class="quick-actions reveal reveal-delay-1">
+      <a href="request-job.html" class="btn-primary">+ Request an Inspection</a>
+    </div>
+
+    <!-- Pending Payment -->
+    <div id="pendingSection" style="display:none;" class="reveal reveal-delay-2">
+      <div class="table-wrap">
+        <div class="table-header">
+          <span class="table-title">Awaiting Payment</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Vessel</th><th>Type</th><th>Price</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="pendingBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Active Jobs -->
+    <div class="table-wrap reveal reveal-delay-2" style="margin-top:0;">
+      <div class="table-header">
+        <span class="table-title">Active Jobs</span>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Vessel</th><th>Type</th><th>Location</th><th>Status</th><th>Diver</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="activeBody">
+          <tr><td colspan="7" class="empty-state">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Completed Jobs -->
+    <div class="table-wrap reveal reveal-delay-3">
+      <div class="table-header">
+        <span class="table-title">Completed Jobs</span>
+        <span id="completedCount" style="font-size:12px; color:var(--fog);"></span>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Vessel</th><th>Type</th><th>Location</th><th>Report</th></tr>
+        </thead>
+        <tbody id="completedBody">
+          <tr><td colspan="5" class="empty-state">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module">
+  import { requireRole, signOut } from './auth.js';
+  import { supabase } from './supabase-client.js';
+
+  function toast(msg, type = 'info') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = `toast toast-${type}`;
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+  }
+
+  function fmt(iso) {
+    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function fmtPrice(cents) {
+    return '$' + (cents / 100).toFixed(0);
+  }
+
+  async function payJob(jobId, priceInCents, vesselName, jobType, userId) {
+    try {
+      const res = await fetch('/.netlify/functions/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobId, priceInCents, vesselName, jobType, userId })
+      });
+      const { url, error } = await res.json();
+      if (error) throw new Error(error);
+      window.location.href = url;
+    } catch (e) {
+      toast('Payment failed: ' + e.message, 'error');
+    }
+  }
+
+  async function init() {
+    const result = await requireRole('vessel_owner');
+    if (!result) return;
+    const { session, profile } = result;
+
+    // Handle return from Stripe
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('payment') === 'success') toast('Payment confirmed — your job is now live!', 'success');
+    if (params.get('payment') === 'cancelled') toast('Payment cancelled. Your job is still saved.', 'info');
+
+    if (profile?.full_name) {
+      document.getElementById('ownerName').textContent = profile.full_name.split(' ')[0];
+    }
+
+    const { data: jobs, error } = await supabase
+      .from('jobs')
+      .select('*, profiles!jobs_diver_id_fkey(full_name)')
+      .eq('vessel_owner_id', session.user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) { toast('Failed to load jobs', 'error'); return; }
+
+    const pending = jobs.filter(j => j.status === 'pending_payment');
+    const active = jobs.filter(j => ['open','accepted','in_progress'].includes(j.status));
+    const complete = jobs.filter(j => j.status === 'complete');
+    const totalSpent = jobs.filter(j => j.paid_at).reduce((sum, j) => sum + (j.price_cents || 0), 0);
+
+    document.getElementById('statOpen').textContent = jobs.filter(j => j.status === 'open').length;
+    document.getElementById('statActive').textContent = active.length;
+    document.getElementById('statComplete').textContent = complete.length;
+    document.getElementById('statSpent').textContent = fmtPrice(totalSpent);
+
+    // Pending payment table
+    if (pending.length > 0) {
+      document.getElementById('pendingSection').style.display = 'block';
+      document.getElementById('pendingBody').innerHTML = pending.map(j => `
+        <tr>
+          <td>${fmt(j.created_at)}</td>
+          <td>${j.vessel_name || '—'}</td>
+          <td>${j.job_type || '—'}</td>
+          <td>${fmtPrice(j.price_cents || 0)}</td>
+          <td class="table-actions">
+            <button class="table-btn send" data-id="${j.id}" data-price="${j.price_cents}" data-vessel="${j.vessel_name}" data-type="${j.job_type}" data-user="${session.user.id}">
+              Complete Payment
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      document.querySelectorAll('#pendingBody .send').forEach(btn => {
+        btn.addEventListener('click', () => {
+          payJob(btn.dataset.id, parseInt(btn.dataset.price), btn.dataset.vessel, btn.dataset.type, btn.dataset.user);
+        });
+      });
+    }
+
+    // Active jobs
+    const activeBody = document.getElementById('activeBody');
+    if (active.length === 0) {
+      activeBody.innerHTML = '<tr><td colspan="7" class="empty-state">No active jobs</td></tr>';
+    } else {
+      activeBody.innerHTML = active.map(j => `
+        <tr>
+          <td>${fmt(j.created_at)}</td>
+          <td>${j.vessel_name || '—'}</td>
+          <td>${j.job_type || '—'}</td>
+          <td>${j.job_location || '—'}</td>
+          <td><span class="badge badge-${j.status}">${j.status.replace('_', ' ')}</span></td>
+          <td>${j.profiles?.full_name || '—'}</td>
+          <td class="table-actions">
+            <a href="job-view.html?id=${j.id}" class="table-btn">View</a>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Completed jobs
+    const completedBody = document.getElementById('completedBody');
+    document.getElementById('completedCount').textContent = complete.length ? `${complete.length} total` : '';
+    if (complete.length === 0) {
+      completedBody.innerHTML = '<tr><td colspan="5" class="empty-state">No completed jobs yet</td></tr>';
+    } else {
+      completedBody.innerHTML = complete.map(j => `
+        <tr>
+          <td>${fmt(j.completed_at || j.created_at)}</td>
+          <td>${j.vessel_name || '—'}</td>
+          <td>${j.job_type || '—'}</td>
+          <td>${j.job_location || '—'}</td>
+          <td class="table-actions">
+            ${j.report_id ? `<a href="report-view.html?id=${j.report_id}" class="table-btn">View Report</a>` : '<span style="color:var(--fog); font-size:12px;">Pending</span>'}
+          </td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  document.getElementById('signOutBtn').addEventListener('click', signOut);
+  document.getElementById('sidebarSignOut').addEventListener('click', (e) => { e.preventDefault(); signOut(); });
+
+  init();
+</script>
+<script src="main.js"></script>
+</body>
+</html>

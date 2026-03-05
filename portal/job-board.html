@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Board — Hero Diver Portal</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<script>
+  window.__SUPABASE_URL__ = 'https://wrqecnvtbqgoezvslrhm.supabase.co';
+  window.__SUPABASE_ANON_KEY__ = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndycWVjbnZ0YnFnb2V6dnNscmhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NTYyMDQsImV4cCI6MjA4ODIzMjIwNH0.t-v9QmDg_mseob-CRK7M9IwcXZAjoW8NMH6Gz2g80Ts';
+</script>
+
+<nav id="mainNav">
+  <a href="https://herodivingandmarine.com" class="nav-brand">
+    <img src="logo.png" class="bottlecap-logo" style="height:48px;" alt="Hero Diving">
+    <span class="nav-brand-text">
+      <span class="nav-brand-name">Hero</span>
+      <span class="nav-brand-sub">Diver Portal</span>
+    </span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="job-board.html" class="active">Job Board</a></li>
+    <li><a href="new-report.html" class="nav-cta">New Report</a></li>
+    <li><button class="nav-sign-out" id="signOutBtn">Sign Out</button></li>
+  </ul>
+</nav>
+
+<div class="portal-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navigation</div>
+      <a href="dashboard.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="job-board.html" class="sidebar-link active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Job Board
+      </a>
+      <a href="new-report.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        New Report
+      </a>
+      <a href="reports.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        All Reports
+      </a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a href="#" class="sidebar-link" id="sidebarSignOut">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <main class="portal-main">
+    <div class="page-header">
+      <div class="page-tag">Available Jobs</div>
+      <h1 class="page-title">Job Board</h1>
+      <p class="page-subtitle">Paid jobs ready to accept — first diver to accept wins the job.</p>
+    </div>
+
+    <!-- Pending approval banner -->
+    <div id="approvalBanner" class="approval-banner" style="display:none;">
+      <div class="approval-banner-icon">⏳</div>
+      <div>
+        <div class="approval-banner-title">Pending Approval</div>
+        <div class="approval-banner-text">Your diver application is under review by the Hero team. You'll receive a welcome email once approved and can begin accepting jobs.</div>
+      </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div id="filterBar" style="display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; align-items:center;">
+      <input type="text" id="filterLocation" class="form-input" placeholder="Filter by location..." style="width:220px;">
+      <select id="filterType" class="form-select" style="width:200px;">
+        <option value="">All Job Types</option>
+        <option>Hull Inspection</option>
+        <option>Hull Cleaning</option>
+        <option>Full Underwater Survey</option>
+        <option>Propeller Check</option>
+        <option>Anode Check &amp; Replacement</option>
+        <option>Zinc Replacement</option>
+        <option>Other</option>
+      </select>
+      <span id="jobCount" style="font-size:13px; color:var(--fog); margin-left:auto;"></span>
+    </div>
+
+    <div id="jobsGrid" class="job-cards-grid">
+      <div style="color:var(--fog); font-size:14px; padding:40px 0;">Loading jobs...</div>
+    </div>
+  </main>
+</div>
+
+<!-- Accept confirmation modal -->
+<div id="acceptModal" style="display:none; position:fixed; inset:0; background:rgba(2,8,16,0.85); z-index:1000; display:none; align-items:center; justify-content:center;">
+  <div style="background:var(--deep); border:1px solid var(--border); padding:40px; max-width:440px; width:90%; position:relative;">
+    <div class="section-tag" style="margin-bottom:16px;">Confirm Acceptance</div>
+    <h3 style="font-family:'Oswald',sans-serif; font-size:22px; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px;" id="modalJobTitle">—</h3>
+    <p style="color:var(--fog); font-size:14px; line-height:1.7; margin-bottom:28px;">
+      By accepting this job you commit to completing the inspection on or around the scheduled date. The vessel owner will be notified immediately.
+    </p>
+    <div style="display:flex; gap:12px;">
+      <button class="btn-primary" id="confirmAcceptBtn" style="flex:1;">Accept Job</button>
+      <button class="btn-ghost" id="cancelAcceptBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module">
+  import { requireRole, signOut } from './auth.js';
+  import { supabase } from './supabase-client.js';
+
+  let allJobs = [];
+  let userId = null;
+  let pendingAcceptJob = null;
+
+  function toast(msg, type = 'info') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = `toast toast-${type}`;
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+  }
+
+  function fmt(iso) {
+    if (!iso) return '—';
+    return new Date(iso + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function fmtPrice(cents) {
+    return '$' + Math.round((cents || 0) / 100);
+  }
+
+  function renderJobs(jobs) {
+    const grid = document.getElementById('jobsGrid');
+    document.getElementById('jobCount').textContent = jobs.length ? `${jobs.length} job${jobs.length !== 1 ? 's' : ''} available` : '';
+
+    if (jobs.length === 0) {
+      grid.innerHTML = '<div class="empty-state" style="padding:60px 0; grid-column:1/-1;">No jobs available right now — check back soon.</div>';
+      return;
+    }
+
+    grid.innerHTML = jobs.map(j => `
+      <div class="job-card" id="job-${j.id}">
+        <div class="job-card-type">${j.job_type || 'Inspection'}</div>
+        <div class="job-card-vessel">${j.vessel_name || 'Unknown Vessel'}</div>
+        <div class="job-card-meta">
+          <div class="job-card-meta-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${j.job_location || '—'}
+          </div>
+          <div class="job-card-meta-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            ${fmt(j.scheduled_date)}
+          </div>
+          ${j.vessel_length ? `<div class="job-card-meta-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            ${j.vessel_length}
+          </div>` : ''}
+        </div>
+        <div class="job-card-rate">${fmtPrice(j.price_cents)}</div>
+        <div class="job-card-actions">
+          <a href="job-view.html?id=${j.id}" class="btn-ghost" style="font-size:13px; padding:10px 20px;">Details</a>
+          <button class="btn-primary accept-btn" data-id="${j.id}" data-title="${(j.job_type || 'Inspection') + ' — ' + (j.vessel_name || 'Vessel')}" data-vessel-owner-id="${j.vessel_owner_id}" style="font-size:13px; padding:10px 20px;">Accept Job →</button>
+        </div>
+      </div>
+    `).join('');
+
+    document.querySelectorAll('.accept-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        pendingAcceptJob = { id: btn.dataset.id, vesselOwnerId: btn.dataset.vesselOwnerId };
+        document.getElementById('modalJobTitle').textContent = btn.dataset.title;
+        document.getElementById('acceptModal').style.display = 'flex';
+      });
+    });
+  }
+
+  function applyFilters() {
+    const loc = document.getElementById('filterLocation').value.toLowerCase();
+    const type = document.getElementById('filterType').value;
+    const filtered = allJobs.filter(j =>
+      (!loc || (j.job_location || '').toLowerCase().includes(loc)) &&
+      (!type || j.job_type === type)
+    );
+    renderJobs(filtered);
+  }
+
+  async function acceptJob(jobId, vesselOwnerId) {
+    const btn = document.getElementById('confirmAcceptBtn');
+    btn.disabled = true;
+    btn.textContent = 'Accepting...';
+
+    try {
+      const { error } = await supabase
+        .from('jobs')
+        .update({ status: 'accepted', diver_id: userId, accepted_at: new Date().toISOString() })
+        .eq('id', jobId)
+        .eq('status', 'open');
+
+      if (error) throw error;
+
+      // Fetch vessel owner email for notification
+      const { data: { session } } = await supabase.auth.getSession();
+      const { data: profile } = await supabase.from('profiles').select('full_name').eq('id', userId).single();
+
+      // Get vessel owner email via function (we don't expose it client-side)
+      await fetch('/.netlify/functions/notify-divers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'job_accepted_lookup',
+          jobId,
+          diverName: profile?.full_name || 'A Hero-certified diver',
+          diverId: userId
+        })
+      }).catch(() => {}); // Non-blocking — job acceptance already succeeded
+
+      document.getElementById('acceptModal').style.display = 'none';
+      window.location.href = 'dashboard.html?accepted=1';
+    } catch (err) {
+      toast('Failed to accept job: ' + err.message, 'error');
+      btn.disabled = false;
+      btn.textContent = 'Accept Job';
+    }
+  }
+
+  async function init() {
+    const result = await requireRole('diver');
+    if (!result) return;
+    const { session, profile } = result;
+    userId = session.user.id;
+
+    // Show approval banner if not yet approved
+    if (!profile?.approved) {
+      document.getElementById('approvalBanner').style.display = 'flex';
+      document.getElementById('filterBar').style.display = 'none';
+      document.getElementById('jobsGrid').innerHTML = '';
+      return;
+    }
+
+    // Load open jobs
+    const { data: jobs, error } = await supabase
+      .from('jobs')
+      .select('*')
+      .eq('status', 'open')
+      .order('created_at', { ascending: false });
+
+    if (error) { toast('Failed to load jobs', 'error'); return; }
+    allJobs = jobs;
+    renderJobs(allJobs);
+
+    // Supabase Realtime — remove jobs from board when accepted
+    supabase
+      .channel('open-jobs')
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'jobs'
+      }, (payload) => {
+        if (payload.new.status !== 'open') {
+          const card = document.getElementById(`job-${payload.new.id}`);
+          if (card) {
+            card.style.opacity = '0.3';
+            card.style.pointerEvents = 'none';
+            setTimeout(() => {
+              card.remove();
+              allJobs = allJobs.filter(j => j.id !== payload.new.id);
+              if (document.querySelectorAll('.job-card').length === 0) {
+                renderJobs([]);
+              }
+            }, 600);
+          }
+        }
+      })
+      .subscribe();
+
+    document.getElementById('filterLocation').addEventListener('input', applyFilters);
+    document.getElementById('filterType').addEventListener('change', applyFilters);
+  }
+
+  document.getElementById('confirmAcceptBtn').addEventListener('click', () => {
+    if (pendingAcceptJob) acceptJob(pendingAcceptJob.id, pendingAcceptJob.vesselOwnerId);
+  });
+  document.getElementById('cancelAcceptBtn').addEventListener('click', () => {
+    document.getElementById('acceptModal').style.display = 'none';
+    pendingAcceptJob = null;
+  });
+
+  document.getElementById('signOutBtn').addEventListener('click', signOut);
+  document.getElementById('sidebarSignOut').addEventListener('click', (e) => { e.preventDefault(); signOut(); });
+
+  init();
+</script>
+<script src="main.js"></script>
+</body>
+</html>

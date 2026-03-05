@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request Inspection — Hero Vessel Portal</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<script>
+  window.__SUPABASE_URL__ = 'https://wrqecnvtbqgoezvslrhm.supabase.co';
+  window.__SUPABASE_ANON_KEY__ = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndycWVjbnZ0YnFnb2V6dnNscmhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NTYyMDQsImV4cCI6MjA4ODIzMjIwNH0.t-v9QmDg_mseob-CRK7M9IwcXZAjoW8NMH6Gz2g80Ts';
+</script>
+
+<nav id="mainNav">
+  <a href="https://herodivingandmarine.com" class="nav-brand">
+    <img src="logo.png" class="bottlecap-logo" style="height:48px;" alt="Hero Diving">
+    <span class="nav-brand-text">
+      <span class="nav-brand-name">Hero</span>
+      <span class="nav-brand-sub">Vessel Portal</span>
+    </span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="vessel-dashboard.html">Dashboard</a></li>
+    <li><a href="request-job.html" class="nav-cta active">Request Inspection</a></li>
+    <li><button class="nav-sign-out" id="signOutBtn">Sign Out</button></li>
+  </ul>
+</nav>
+
+<div class="portal-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navigation</div>
+      <a href="vessel-dashboard.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="request-job.html" class="sidebar-link active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Request Inspection
+      </a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a href="#" class="sidebar-link" id="sidebarSignOut">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <main class="portal-main">
+    <div class="page-header">
+      <div class="page-tag">New Request</div>
+      <h1 class="page-title">Request an Inspection</h1>
+      <p class="page-subtitle">A certified Hero diver will be dispatched once payment is confirmed.</p>
+    </div>
+
+    <div style="max-width:680px;">
+
+      <form id="jobForm">
+
+        <!-- Section: Vessel Details -->
+        <div class="report-section" style="margin-bottom:28px;">
+          <div class="report-section-title">Vessel Details</div>
+          <div class="report-field-grid">
+            <div class="report-field" style="grid-column:span 2;">
+              <label class="form-label" for="vesselName">Vessel Name *</label>
+              <input type="text" id="vesselName" name="vessel_name" class="form-input" placeholder="e.g. Sea Witch" required>
+            </div>
+            <div class="report-field">
+              <label class="form-label" for="vesselType">Vessel Type *</label>
+              <select id="vesselType" name="vessel_type" class="form-select" required>
+                <option value="">Select type</option>
+                <option>Sailboat</option>
+                <option>Powerboat / Motor Yacht</option>
+                <option>Catamaran</option>
+                <option>Trawler</option>
+                <option>Center Console</option>
+                <option>Commercial Vessel</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="report-field">
+              <label class="form-label" for="vesselLength">Vessel Length</label>
+              <div class="input-with-unit">
+                <input type="number" id="vesselLength" name="vessel_length" class="form-input" placeholder="42" min="1" max="500">
+                <select name="length_unit" class="form-select unit-select">
+                  <option>ft</option>
+                  <option>m</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Job Details -->
+        <div class="report-section" style="margin-bottom:28px;">
+          <div class="report-section-title">Job Details</div>
+          <div class="report-field-grid">
+            <div class="report-field">
+              <label class="form-label" for="jobType">Service Type *</label>
+              <select id="jobType" name="job_type" class="form-select" required>
+                <option value="">Select service</option>
+                <option>Hull Inspection</option>
+                <option>Hull Cleaning</option>
+                <option>Full Underwater Survey</option>
+                <option>Propeller Check</option>
+                <option>Anode Check &amp; Replacement</option>
+                <option>Zinc Replacement</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="report-field">
+              <label class="form-label" for="scheduledDate">Preferred Date *</label>
+              <input type="date" id="scheduledDate" name="scheduled_date" class="form-input" required>
+            </div>
+            <div class="report-field" style="grid-column:span 2;">
+              <label class="form-label" for="jobLocation">Marina / Location *</label>
+              <input type="text" id="jobLocation" name="job_location" class="form-input" placeholder="e.g. Marina del Rey, CA" required>
+            </div>
+            <div class="report-field" style="grid-column:span 2;">
+              <label class="form-label" for="description">Special Instructions (optional)</label>
+              <textarea id="description" name="description" class="form-textarea" rows="3" placeholder="Any specific areas of concern, access notes, etc."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pricing -->
+        <div class="price-display" id="priceDisplay" style="display:none;">
+          <div>
+            <div class="price-display-label">Platform Rate</div>
+            <div style="font-size:12px; color:var(--fog); margin-top:2px;">Paid securely via Stripe. Diver dispatched after confirmation.</div>
+          </div>
+          <div class="price-display-value" id="priceValue">$—</div>
+        </div>
+
+        <div class="form-error" id="jobError"></div>
+
+        <div style="display:flex; gap:16px; margin-top:8px;">
+          <button type="submit" class="btn-primary" id="submitBtn" style="flex:1;">Proceed to Payment →</button>
+          <a href="vessel-dashboard.html" class="btn-ghost">Cancel</a>
+        </div>
+        <p style="font-size:12px; color:var(--fog); margin-top:12px; line-height:1.6;">
+          You will be redirected to Stripe's secure checkout. Your job goes live to nearby divers once payment is confirmed.
+        </p>
+      </form>
+
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module">
+  import { requireRole, signOut } from './auth.js';
+  import { supabase } from './supabase-client.js';
+
+  const JOB_PRICES = {
+    'Hull Inspection': 19900,
+    'Hull Cleaning': 29900,
+    'Full Underwater Survey': 49900,
+    'Propeller Check': 14900,
+    'Anode Check & Replacement': 14900,
+    'Zinc Replacement': 19900,
+    'Other': 24900
+  };
+
+  function toast(msg, type = 'info') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = `toast toast-${type}`;
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+  }
+
+  function fmtPrice(cents) {
+    return '$' + (cents / 100).toFixed(0);
+  }
+
+  let userId = null;
+
+  async function init() {
+    const result = await requireRole('vessel_owner');
+    if (!result) return;
+    userId = result.session.user.id;
+
+    // Default date to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('scheduledDate').value = tomorrow.toISOString().split('T')[0];
+
+    // Update price on job type change
+    document.getElementById('jobType').addEventListener('change', (e) => {
+      const price = JOB_PRICES[e.target.value];
+      const display = document.getElementById('priceDisplay');
+      if (price) {
+        document.getElementById('priceValue').textContent = fmtPrice(price);
+        display.style.display = 'flex';
+      } else {
+        display.style.display = 'none';
+      }
+    });
+  }
+
+  document.getElementById('jobForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const errorEl = document.getElementById('jobError');
+    errorEl.classList.remove('visible');
+
+    const fd = new FormData(e.target);
+    const jobType = fd.get('job_type');
+    const vesselName = fd.get('vessel_name');
+    const priceInCents = JOB_PRICES[jobType] || 24900;
+
+    btn.disabled = true;
+    btn.textContent = 'Creating Job...';
+
+    // Insert job row
+    const { data: job, error } = await supabase.from('jobs').insert([{
+      vessel_owner_id: userId,
+      status: 'pending_payment',
+      job_type: jobType,
+      vessel_name: vesselName,
+      vessel_type: fd.get('vessel_type'),
+      vessel_length: fd.get('vessel_length') ? `${fd.get('vessel_length')} ${fd.get('length_unit')}` : null,
+      job_location: fd.get('job_location'),
+      scheduled_date: fd.get('scheduled_date'),
+      description: fd.get('description'),
+      price_cents: priceInCents
+    }]).select().single();
+
+    if (error) {
+      errorEl.textContent = 'Failed to create job: ' + error.message;
+      errorEl.classList.add('visible');
+      btn.disabled = false;
+      btn.textContent = 'Proceed to Payment →';
+      return;
+    }
+
+    btn.textContent = 'Redirecting to Payment...';
+
+    // Create Stripe Checkout session
+    try {
+      const res = await fetch('/.netlify/functions/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jobId: job.id,
+          priceInCents,
+          vesselName,
+          jobType,
+          userId
+        })
+      });
+      const { url, error: checkoutError } = await res.json();
+      if (checkoutError) throw new Error(checkoutError);
+      window.location.href = url;
+    } catch (err) {
+      errorEl.textContent = 'Payment setup failed: ' + err.message;
+      errorEl.classList.add('visible');
+      btn.disabled = false;
+      btn.textContent = 'Proceed to Payment →';
+    }
+  });
+
+  document.getElementById('signOutBtn').addEventListener('click', signOut);
+  document.getElementById('sidebarSignOut').addEventListener('click', (e) => { e.preventDefault(); signOut(); });
+
+  init();
+</script>
+<script src="main.js"></script>
+</body>
+</html>

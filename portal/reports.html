@@ -103,7 +103,7 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script type="module">
-  import { requireAuth, signOut } from './auth.js';
+  import { requireRole, signOut } from './auth.js';
   import { supabase } from './supabase-client.js';
 
   let allReports = [];
@@ -183,8 +183,9 @@
   }
 
   async function init() {
-    const session = await requireAuth();
-    if (!session) return;
+    const result = await requireRole('diver');
+    if (!result) return;
+    const { session } = result;
 
     const { data, error } = await supabase
       .from('reports')

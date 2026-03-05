@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account — Hero Divers Portal</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<script>
+  window.__SUPABASE_URL__ = 'https://wrqecnvtbqgoezvslrhm.supabase.co';
+  window.__SUPABASE_ANON_KEY__ = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndycWVjbnZ0YnFnb2V6dnNscmhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NTYyMDQsImV4cCI6MjA4ODIzMjIwNH0.t-v9QmDg_mseob-CRK7M9IwcXZAjoW8NMH6Gz2g80Ts';
+</script>
+
+<nav id="mainNav">
+  <a href="https://herodivingandmarine.com" class="nav-brand">
+    <img src="logo.png" class="bottlecap-logo" style="height:48px;" alt="Hero Diving">
+    <span class="nav-brand-text">
+      <span class="nav-brand-name">Hero</span>
+      <span class="nav-brand-sub">Diver Portal</span>
+    </span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="https://herodivingandmarine.com">Main Site</a></li>
+  </ul>
+</nav>
+
+<div class="login-wrap">
+  <div class="login-ocean"></div>
+  <div class="god-rays">
+    <div class="god-ray"></div>
+    <div class="god-ray"></div>
+    <div class="god-ray"></div>
+    <div class="god-ray"></div>
+  </div>
+  <div class="bubbles" id="loginBubbles" data-bubbles="12"></div>
+  <div class="plankton-field" id="loginPlankton" data-plankton="18"></div>
+
+  <div class="login-card" style="max-width:480px;">
+    <div class="login-logo">
+      <img src="logo.png" alt="Hero Diving">
+    </div>
+    <div class="login-portal-tag">Hero Divers Portal</div>
+    <div class="login-title">Create Account</div>
+
+    <!-- Role toggle -->
+    <div style="display:flex; gap:8px; margin-bottom:28px;">
+      <button class="role-toggle active" id="roleDiver" data-role="diver">
+        I'm a Diver
+      </button>
+      <button class="role-toggle" id="roleOwner" data-role="vessel_owner">
+        I'm a Vessel Owner
+      </button>
+    </div>
+
+    <div class="form-error" id="signupError"></div>
+    <div class="form-success" id="signupSuccess"></div>
+
+    <form id="signupForm">
+      <div class="form-group">
+        <label class="form-label" for="fullName">Full Name</label>
+        <input type="text" id="fullName" class="form-input" placeholder="Jane Torres" required autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input type="email" id="email" class="form-input" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input type="password" id="password" class="form-input" placeholder="At least 8 characters" required autocomplete="new-password" minlength="8">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" class="form-input" placeholder="••••••••" required autocomplete="new-password">
+      </div>
+
+      <!-- Diver-only fields -->
+      <div id="diverFields">
+        <div class="form-group">
+          <label class="form-label" for="certAgency">Certification Agency</label>
+          <select id="certAgency" class="form-select">
+            <option value="">Select agency</option>
+            <option>PADI</option>
+            <option>NAUI</option>
+            <option>SSI</option>
+            <option>SDI</option>
+            <option>BSAC</option>
+            <option>ADAS</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="certNumber">Certification Number</label>
+          <input type="text" id="certNumber" class="form-input" placeholder="e.g. PADI-1234567">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="location">General Location / Port</label>
+          <input type="text" id="location" class="form-input" placeholder="e.g. Miami, FL">
+        </div>
+        <div style="background:rgba(0,212,255,0.06); border:1px solid rgba(0,212,255,0.2); padding:16px; margin-bottom:20px; font-size:13px; color:var(--fog); line-height:1.6;">
+          Diver accounts require approval before you can accept jobs. You'll receive a welcome email once your application is reviewed by the Hero team.
+        </div>
+      </div>
+
+      <!-- Vessel owner-only fields -->
+      <div id="ownerFields" style="display:none;">
+        <div class="form-group">
+          <label class="form-label" for="phone">Phone Number (optional)</label>
+          <input type="tel" id="phone" class="form-input" placeholder="+1 (555) 000-0000" autocomplete="tel">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="company">Company / Fleet Name (optional)</label>
+          <input type="text" id="company" class="form-input" placeholder="e.g. Blue Water Charters">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary" id="signupBtn" style="width:100%;">Create Account</button>
+    </form>
+
+    <div class="login-footer" style="margin-top:20px; text-align:center;">
+      Already have an account? <a href="index.html">Sign In</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module">
+  import { signUp, getProfile, getRoleRedirect } from './auth.js';
+  import { supabase } from './supabase-client.js';
+
+  // Already logged in → redirect
+  supabase.auth.getSession().then(async ({ data: { session } }) => {
+    if (session) {
+      const profile = await getProfile(session.user.id);
+      window.location.href = getRoleRedirect(profile?.role);
+    }
+  });
+
+  let selectedRole = 'diver';
+
+  // Role toggle
+  document.querySelectorAll('.role-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.role-toggle').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedRole = btn.dataset.role;
+      document.getElementById('diverFields').style.display = selectedRole === 'diver' ? 'block' : 'none';
+      document.getElementById('ownerFields').style.display = selectedRole === 'vessel_owner' ? 'block' : 'none';
+    });
+  });
+
+  const form = document.getElementById('signupForm');
+  const btn = document.getElementById('signupBtn');
+  const errorEl = document.getElementById('signupError');
+  const successEl = document.getElementById('signupSuccess');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorEl.classList.remove('visible');
+    successEl.classList.remove('visible');
+
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+
+    if (password !== confirm) {
+      errorEl.textContent = 'Passwords do not match.';
+      errorEl.classList.add('visible');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Creating Account...';
+
+    const { data, error } = await signUp(email, password, selectedRole, fullName);
+
+    if (error) {
+      errorEl.textContent = error.message;
+      errorEl.classList.add('visible');
+      btn.disabled = false;
+      btn.textContent = 'Create Account';
+      return;
+    }
+
+    // Supabase requires email confirmation — show message
+    if (data.user && !data.session) {
+      form.style.display = 'none';
+      successEl.innerHTML = `
+        <strong>Check your email!</strong><br>
+        We've sent a confirmation link to <strong>${email}</strong>.<br>
+        Click it to activate your account, then sign in here.
+      `;
+      successEl.classList.add('visible');
+      return;
+    }
+
+    // If email confirmation is disabled, redirect immediately
+    if (data.session) {
+      window.location.href = getRoleRedirect(selectedRole);
+    }
+  });
+</script>
+<script src="main.js"></script>
+</body>
+</html>
