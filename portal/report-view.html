@@ -82,7 +82,7 @@
     return `
       <div class="report-field">
         <div class="report-field-label">${label}</div>
-        <div class="report-field-value">${value || '—'}</div>
+        <div class="report-field-value">${value || ''}</div>
       </div>`;
   }
 
@@ -141,7 +141,7 @@
         ${section('Hull Condition', [
           `<div class="report-field" style="grid-column:span 2;">
             <div class="report-field-label">Overall Hull Rating</div>
-            <div class="rating-display">${d.hull_rating || '—'}</div>
+            <div class="rating-display">${d.hull_rating || ''}</div>
           </div>`,
           field('Marine Growth Coverage', d.marine_growth_coverage),
           field('Marine Growth Type', d.marine_growth_type),
@@ -149,7 +149,7 @@
           field('Hull Damage', d.hull_damage),
           `<div class="report-field" style="grid-column:span 2;">
             <div class="report-field-label">Hull Condition Notes</div>
-            <div class="report-field-value">${d.hull_notes || '—'}</div>
+            <div class="report-field-value">${d.hull_notes || ''}</div>
           </div>`
         ])}
 
@@ -160,7 +160,7 @@
           field('Rudder Condition', d.rudder_condition),
           `<div class="report-field" style="grid-column:span 2;">
             <div class="report-field-label">Running Gear Notes</div>
-            <div class="report-field-value">${d.running_gear_notes || '—'}</div>
+            <div class="report-field-value">${d.running_gear_notes || ''}</div>
           </div>`
         ])}
 
@@ -169,7 +169,7 @@
           field('Anode Count Remaining', d.anode_count),
           `<div class="report-field" style="grid-column:span 2;">
             <div class="report-field-label">Anode Notes</div>
-            <div class="report-field-value">${d.anode_notes || '—'}</div>
+            <div class="report-field-value">${d.anode_notes || ''}</div>
           </div>`
         ])}
 
@@ -178,7 +178,7 @@
           field('Number of Through-Hulls', d.throughhull_count),
           `<div class="report-field" style="grid-column:span 2;">
             <div class="report-field-label">Through-Hull Notes</div>
-            <div class="report-field-value">${d.throughhull_notes || '—'}</div>
+            <div class="report-field-value">${d.throughhull_notes || ''}</div>
           </div>`
         ])}
 
@@ -188,7 +188,7 @@
           field('Water Temperature', d.water_temp ? `${d.water_temp}${d.temp_unit || '°F'}` : ''),
           `<div class="report-field" style="grid-column:span 2;">
             <div class="report-field-label">Diver Notes</div>
-            <div class="report-field-value">${d.dive_notes || '—'}</div>
+            <div class="report-field-value">${d.dive_notes || ''}</div>
           </div>`
         ])}
 
@@ -199,11 +199,11 @@
               d.action_priority === 'Immediate Action Required' ? 'var(--signal-red)' :
               d.action_priority === 'Within 30 Days' ? '#e85c27' :
               d.action_priority === 'No Action Required' ? '#4ade80' : 'var(--white)'
-            };">${d.action_priority || '—'}</div>
+            };">${d.action_priority || ''}</div>
           </div>`,
           `<div class="report-field" style="grid-column:span 2;">
             <div class="report-field-label">Detailed Recommendations</div>
-            <div class="report-field-value">${d.recommendations || '—'}</div>
+            <div class="report-field-value">${d.recommendations || ''}</div>
           </div>`
         ])}
 

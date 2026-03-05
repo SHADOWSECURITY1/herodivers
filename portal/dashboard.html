@@ -73,23 +73,23 @@
     <div class="stats-grid reveal">
       <div class="stat-card">
         <div class="stat-label">Total Reports</div>
-        <div class="stat-value cyan" id="statTotal">—</div>
+        <div class="stat-value cyan" id="statTotal"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">This Month</div>
-        <div class="stat-value" id="statMonth">—</div>
+        <div class="stat-value" id="statMonth"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Reports Sent</div>
-        <div class="stat-value" id="statSent">—</div>
+        <div class="stat-value" id="statSent"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Drafts</div>
-        <div class="stat-value red" id="statDraft">—</div>
+        <div class="stat-value red" id="statDraft"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Available Jobs</div>
-        <div class="stat-value cyan" id="statJobs">—</div>
+        <div class="stat-value cyan" id="statJobs"></div>
       </div>
     </div>
 
@@ -97,8 +97,8 @@
     <div id="activeJobBanner" class="active-job-banner" style="display:none;">
       <div>
         <div class="active-job-banner-label">Active Job</div>
-        <div class="active-job-banner-vessel" id="activeJobVessel">—</div>
-        <div class="active-job-banner-meta" id="activeJobMeta">—</div>
+        <div class="active-job-banner-vessel" id="activeJobVessel"></div>
+        <div class="active-job-banner-meta" id="activeJobMeta"></div>
       </div>
       <div class="active-job-banner-actions">
         <a id="activeJobViewLink" href="#" class="btn-ghost" style="font-size:13px; padding:10px 20px;">View Job</a>
@@ -211,9 +211,9 @@
       tbody.innerHTML = recent.map(r => `
         <tr>
           <td>${formatDate(r.created_at)}</td>
-          <td>${r.vessel_name || '—'}</td>
-          <td>${r.client_name || '—'}</td>
-          <td>${r.report_type || '—'}</td>
+          <td>${r.vessel_name || ''}</td>
+          <td>${r.client_name || ''}</td>
+          <td>${r.report_type || ''}</td>
           <td><span class="badge badge-${r.status}">${r.status}</span></td>
           <td class="table-actions">
             <a href="report-view.html?id=${r.id}" class="table-btn">View</a>

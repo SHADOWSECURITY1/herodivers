@@ -130,10 +130,10 @@
     tbody.innerHTML = reports.map(r => `
       <tr>
         <td>${formatDate(r.created_at)}</td>
-        <td>${r.vessel_name || '—'}</td>
-        <td>${r.client_name || '—'}</td>
-        <td>${r.job_location || '—'}</td>
-        <td>${r.report_type || '—'}</td>
+        <td>${r.vessel_name || ''}</td>
+        <td>${r.client_name || ''}</td>
+        <td>${r.job_location || ''}</td>
+        <td>${r.report_type || ''}</td>
         <td><span class="badge badge-${r.status}">${r.status}</span></td>
         <td class="table-actions">
           <a href="report-view.html?id=${r.id}" class="table-btn">View</a>

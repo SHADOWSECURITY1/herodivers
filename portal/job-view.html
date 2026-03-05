@@ -77,7 +77,7 @@
   }
 
   function fmt(iso) {
-    if (!iso) return '—';
+    if (!iso) return '';
     return new Date(iso).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   }
 
@@ -105,7 +105,7 @@
   function field(label, value) {
     return `<div class="report-field">
       <div class="report-field-label">${label}</div>
-      <div class="report-field-value">${value || '—'}</div>
+      <div class="report-field-value">${value || ''}</div>
     </div>`;
   }
 

@@ -65,19 +65,19 @@
     <div class="stats-grid reveal">
       <div class="stat-card">
         <div class="stat-label">Pending Applications</div>
-        <div class="stat-value red" id="statPending">—</div>
+        <div class="stat-value red" id="statPending"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Active Jobs</div>
-        <div class="stat-value cyan" id="statActive">—</div>
+        <div class="stat-value cyan" id="statActive"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Approved Divers</div>
-        <div class="stat-value" id="statDivers">—</div>
+        <div class="stat-value" id="statDivers"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Revenue MTD</div>
-        <div class="stat-value" id="statRevenueMTD">—</div>
+        <div class="stat-value" id="statRevenueMTD"></div>
       </div>
     </div>
 
@@ -130,15 +130,15 @@
     <div id="section-revenue" class="stats-grid reveal reveal-delay-3" style="margin-top:0;">
       <div class="stat-card">
         <div class="stat-label">Total Revenue</div>
-        <div class="stat-value" id="statRevenueTotal">—</div>
+        <div class="stat-value" id="statRevenueTotal"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Hero Take (20%)</div>
-        <div class="stat-value cyan" id="statHeroTake">—</div>
+        <div class="stat-value cyan" id="statHeroTake"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Diver Payouts (80%)</div>
-        <div class="stat-value" id="statDiverPayout">—</div>
+        <div class="stat-value" id="statDiverPayout"></div>
       </div>
     </div>
   </main>
@@ -164,12 +164,12 @@
   }
 
   function fmt(iso) {
-    if (!iso) return '—';
+    if (!iso) return '';
     return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   }
 
   function fmtPrice(cents) {
-    if (!cents) return '—';
+    if (!cents) return '';
     return '$' + Math.round(cents / 100);
   }
 
@@ -194,10 +194,10 @@
     tbody.innerHTML = apps.map(a => `
       <tr id="app-${a.id}">
         <td>${fmt(a.created_at)}</td>
-        <td>${a.full_name || '—'}</td>
-        <td style="font-size:12px;">${a.email || '—'}</td>
-        <td>${a.location || '—'}</td>
-        <td>${a.cert_agency || '—'}</td>
+        <td>${a.full_name || ''}</td>
+        <td style="font-size:12px;">${a.email || ''}</td>
+        <td>${a.location || ''}</td>
+        <td>${a.cert_agency || ''}</td>
         <td><span class="badge badge-${a.status === 'pending' ? 'open' : a.status === 'approved' ? 'complete' : 'cancelled'}">${a.status}</span></td>
         <td class="table-actions">
           ${a.status === 'pending' ? `
@@ -238,11 +238,11 @@
     tbody.innerHTML = jobs.map(j => `
       <tr>
         <td>${fmt(j.created_at)}</td>
-        <td style="font-size:12px;">${j['profiles!jobs_vessel_owner_id_fkey']?.full_name || '—'}</td>
-        <td>${j.vessel_name || '—'}</td>
-        <td style="font-size:12px;">${j.job_type || '—'}</td>
-        <td style="font-size:12px;">${j.job_location || '—'}</td>
-        <td style="font-size:12px;">${j['profiles!jobs_diver_id_fkey']?.full_name || '—'}</td>
+        <td style="font-size:12px;">${j['profiles!jobs_vessel_owner_id_fkey']?.full_name || ''}</td>
+        <td>${j.vessel_name || ''}</td>
+        <td style="font-size:12px;">${j.job_type || ''}</td>
+        <td style="font-size:12px;">${j.job_location || ''}</td>
+        <td style="font-size:12px;">${j['profiles!jobs_diver_id_fkey']?.full_name || ''}</td>
         <td><span class="badge badge-${j.status}">${j.status.replace(/_/g, ' ')}</span></td>
         <td>${fmtPrice(j.price_cents)}</td>
         <td class="table-actions">

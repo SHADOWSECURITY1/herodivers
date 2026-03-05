@@ -61,19 +61,19 @@
     <div class="stats-grid reveal">
       <div class="stat-card">
         <div class="stat-label">Open Jobs</div>
-        <div class="stat-value cyan" id="statOpen">—</div>
+        <div class="stat-value cyan" id="statOpen"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Active Jobs</div>
-        <div class="stat-value" id="statActive">—</div>
+        <div class="stat-value" id="statActive"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Completed</div>
-        <div class="stat-value" id="statComplete">—</div>
+        <div class="stat-value" id="statComplete"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Total Spent</div>
-        <div class="stat-value" id="statSpent">—</div>
+        <div class="stat-value" id="statSpent"></div>
       </div>
     </div>
 
@@ -230,8 +230,8 @@
       document.getElementById('pendingBody').innerHTML = pending.map(j => `
         <tr>
           <td>${fmt(j.created_at)}</td>
-          <td>${j.vessel_name || '—'}</td>
-          <td>${j.job_type || '—'}</td>
+          <td>${j.vessel_name || ''}</td>
+          <td>${j.job_type || ''}</td>
           <td>${fmtPrice(j.price_cents || 0)}</td>
           <td class="table-actions">
             <button class="table-btn send" data-id="${j.id}" data-price="${j.price_cents}" data-vessel="${j.vessel_name}" data-type="${j.job_type}" data-user="${session.user.id}">
@@ -256,11 +256,11 @@
       activeBody.innerHTML = active.map(j => `
         <tr>
           <td>${fmt(j.created_at)}</td>
-          <td>${j.vessel_name || '—'}</td>
-          <td>${j.job_type || '—'}</td>
-          <td>${j.job_location || '—'}</td>
+          <td>${j.vessel_name || ''}</td>
+          <td>${j.job_type || ''}</td>
+          <td>${j.job_location || ''}</td>
           <td><span class="badge badge-${j.status}">${j.status.replace('_', ' ')}</span></td>
-          <td>${j.profiles?.full_name || '—'}</td>
+          <td>${j.profiles?.full_name || ''}</td>
           <td class="table-actions">
             <a href="job-view.html?id=${j.id}" class="table-btn">View</a>
           </td>
@@ -281,9 +281,9 @@
           : (j.diver_id ? `<button class="table-btn send rate-btn" data-job-id="${j.id}" data-diver-id="${j.diver_id}" data-vessel="${j.vessel_name || ''}">Rate Diver ★</button>` : '—');
         return `<tr>
           <td>${fmt(j.completed_at || j.created_at)}</td>
-          <td>${j.vessel_name || '—'}</td>
-          <td>${j.job_type || '—'}</td>
-          <td>${j.job_location || '—'}</td>
+          <td>${j.vessel_name || ''}</td>
+          <td>${j.job_type || ''}</td>
+          <td>${j.job_location || ''}</td>
           <td class="table-actions">
             ${j.report_id ? `<a href="report-view.html?id=${j.report_id}" class="table-btn">View Report</a>` : '<span style="color:var(--fog); font-size:12px;">Pending</span>'}
           </td>
