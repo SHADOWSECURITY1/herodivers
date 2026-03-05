@@ -1,7 +1,6 @@
 // Netlify Function: send-report
 // Sends a formatted inspection report via Resend and marks it as sent in Supabase
-
-const { createClient } = require('@supabase/supabase-js');
+// Uses only built-in fetch — no npm dependencies required
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -210,10 +209,18 @@ exports.handler = async (event) => {
       throw new Error(resendError.message || 'Resend API error');
     }
 
-    // Update report status in Supabase if we have the credentials and a report ID
+    // Update report status in Supabase via REST API (no npm package needed)
     if (reportId && SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
-      const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-      await supabase.from('reports').update({ status: 'sent', sent_at: new Date().toISOString() }).eq('id', reportId);
+      await fetch(`${SUPABASE_URL}/rest/v1/reports?id=eq.${reportId}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': SUPABASE_SERVICE_ROLE_KEY,
+          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ status: 'sent', sent_at: new Date().toISOString() })
+      });
     }
 
     return {
