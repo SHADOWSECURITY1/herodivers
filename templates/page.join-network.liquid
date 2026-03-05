@@ -1,0 +1,373 @@
+<!-- Hero -->
+<section class="page-hero">
+  <div class="page-hero-ocean"></div>
+  <div class="god-rays"><div class="god-ray"></div><div class="god-ray"></div><div class="god-ray"></div><div class="god-ray"></div></div>
+  <div class="caustics"></div>
+  <div class="bubbles" id="heroBubbles" data-bubbles="14"></div>
+  <div class="plankton-field" id="heroPlankton" data-plankton="20"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-tag">Diver Network</div>
+    <h1 class="page-hero-title">Join the<br><span class="highlight">Hero Network</span></h1>
+    <p class="page-hero-desc">Apply to become a Hero-certified diver. Get matched with inspection and cleaning jobs in your area. You dive — we handle everything else.</p>
+  </div>
+</section>
+
+<!-- How it pays -->
+<section class="content-section dark" style="padding:60px 0;">
+  <div class="god-rays" style="opacity:0.3;"><div class="god-ray" style="left:20%;width:80px;"></div><div class="god-ray" style="left:70%;width:100px;"></div></div>
+  <div class="bubbles" id="b0" data-bubbles="6"></div>
+  <div class="content-wrap" style="position:relative;z-index:2;">
+    <div class="feature-grid reveal">
+      <div class="feature-card">
+        <span class="icon">💰</span>
+        <h3>80% Per Job</h3>
+        <p>You keep 80% of every job. Hero Divers takes a 20% platform fee and handles client acquisition, invoicing, and payment processing.</p>
+      </div>
+      <div class="feature-card">
+        <span class="icon">📍</span>
+        <h3>Work Your Area</h3>
+        <p>Set your service radius. Jobs within your coverage zone come to you first. Accept or decline — you control your schedule.</p>
+      </div>
+      <div class="feature-card">
+        <span class="icon">📋</span>
+        <h3>Standardized Reports</h3>
+        <p>Use the Hero portal to submit professional inspection reports. We handle the client-facing presentation — you just fill it out.</p>
+      </div>
+      <div class="feature-card">
+        <span class="icon">⚡</span>
+        <h3>Fast Payouts</h3>
+        <p>Payments release automatically when a report is submitted and approved. Funds hit your account within 2 business days via Stripe.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Application form -->
+<section class="content-section" style="position:relative; padding:80px 0; background:var(--ocean);">
+  <div class="bubbles" id="b1" data-bubbles="10"></div>
+  <div class="content-wrap" style="position:relative;z-index:2;">
+    <div class="section-tag reveal">Application</div>
+    <h2 class="reveal reveal-delay-1" style="margin-bottom:8px;">Apply to Join</h2>
+    <p class="reveal reveal-delay-2" style="color:var(--fog); margin-bottom:48px; font-size:16px;">Complete the application below. Our team reviews all applications within 48 hours.</p>
+
+    <div id="formSuccess" style="display:none; padding:24px; background:rgba(26,107,74,0.2); border:1px solid rgba(74,222,128,0.3); color:#4ade80; font-family:'Barlow Condensed',sans-serif; letter-spacing:2px; text-transform:uppercase; margin-bottom:32px;">
+      ✓ Application submitted! We'll review it and reach out within 48 hours.
+    </div>
+    <div id="formError" style="display:none; padding:24px; background:rgba(232,39,44,0.1); border:1px solid rgba(232,39,44,0.3); color:#ff6b6e; font-family:'Barlow Condensed',sans-serif; letter-spacing:2px; text-transform:uppercase; margin-bottom:32px;"></div>
+
+    <form id="joinForm" style="max-width:800px;">
+
+      <!-- Section 1: Personal Info -->
+      <div style="background:rgba(2,8,16,0.5); border:1px solid rgba(0,212,255,0.12); padding:32px; margin-bottom:24px;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--cyan); margin-bottom:20px;">01 — Personal Information</div>
+        <div class="form-row">
+          <div class="form-group reveal">
+            <label>First Name *</label>
+            <input type="text" name="first_name" class="form-input-shopify" placeholder="First name" required>
+          </div>
+          <div class="form-group reveal">
+            <label>Last Name *</label>
+            <input type="text" name="last_name" class="form-input-shopify" placeholder="Last name" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group reveal">
+            <label>Email Address *</label>
+            <input type="email" name="email" class="form-input-shopify" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group reveal">
+            <label>Phone Number *</label>
+            <input type="tel" name="phone" class="form-input-shopify" placeholder="+1 (555) 000-0000" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group reveal">
+            <label>City *</label>
+            <input type="text" name="city" class="form-input-shopify" placeholder="Miami" required>
+          </div>
+          <div class="form-group reveal">
+            <label>State / Country *</label>
+            <input type="text" name="state_country" class="form-input-shopify" placeholder="FL / USA" required>
+          </div>
+        </div>
+        <div class="form-group reveal">
+          <label>Service Radius *</label>
+          <select name="service_radius" class="form-select-shopify" required>
+            <option value="">How far will you travel for jobs?</option>
+            <option value="25">Within 25 miles</option>
+            <option value="50">Within 50 miles</option>
+            <option value="100">Within 100 miles</option>
+            <option value="250">Within 250 miles</option>
+            <option value="500">Within 500 miles</option>
+            <option value="anywhere">Anywhere — I travel for work</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Section 2: Certifications -->
+      <div style="background:rgba(2,8,16,0.5); border:1px solid rgba(0,212,255,0.12); padding:32px; margin-bottom:24px;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--cyan); margin-bottom:20px;">02 — Certifications</div>
+        <div class="form-row">
+          <div class="form-group reveal">
+            <label>Primary Certification Agency *</label>
+            <select name="cert_agency" class="form-select-shopify" required>
+              <option value="">Select agency...</option>
+              <option>PADI</option>
+              <option>NAUI</option>
+              <option>SSI</option>
+              <option>SDI / TDI</option>
+              <option>BSAC</option>
+              <option>CMAS</option>
+              <option>ADCI (Commercial)</option>
+              <option>IMCA (Commercial)</option>
+              <option>US Navy</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group reveal">
+            <label>Certification Number *</label>
+            <input type="text" name="cert_number" class="form-input-shopify" placeholder="e.g. PADI-123456" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group reveal">
+            <label>Highest Certification Level *</label>
+            <select name="cert_level" class="form-select-shopify" required>
+              <option value="">Select level...</option>
+              <option>Open Water</option>
+              <option>Advanced Open Water</option>
+              <option>Rescue Diver</option>
+              <option>Divemaster</option>
+              <option>Instructor</option>
+              <option>Commercial Diver</option>
+              <option>Saturation Diver</option>
+              <option>Military / Special Operations</option>
+            </select>
+          </div>
+          <div class="form-group reveal">
+            <label>Certification Expiry</label>
+            <input type="month" name="cert_expiry" class="form-input-shopify">
+          </div>
+        </div>
+        <div class="form-group reveal">
+          <label>Additional Certifications</label>
+          <input type="text" name="additional_certs" class="form-input-shopify" placeholder="e.g. NDT Level II, Underwater Welding, Nitrox, Rebreather...">
+        </div>
+      </div>
+
+      <!-- Section 3: Experience -->
+      <div style="background:rgba(2,8,16,0.5); border:1px solid rgba(0,212,255,0.12); padding:32px; margin-bottom:24px;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--cyan); margin-bottom:20px;">03 — Experience</div>
+        <div class="form-row">
+          <div class="form-group reveal">
+            <label>Years of Diving Experience *</label>
+            <select name="years_experience" class="form-select-shopify" required>
+              <option value="">Select...</option>
+              <option>Less than 1 year</option>
+              <option>1–3 years</option>
+              <option>3–5 years</option>
+              <option>5–10 years</option>
+              <option>10–20 years</option>
+              <option>20+ years</option>
+            </select>
+          </div>
+          <div class="form-group reveal">
+            <label>Commercial Diving Experience *</label>
+            <select name="commercial_experience" class="form-select-shopify" required>
+              <option value="">Select...</option>
+              <option>No commercial experience</option>
+              <option>Less than 1 year</option>
+              <option>1–3 years</option>
+              <option>3–5 years</option>
+              <option>5+ years</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group reveal">
+          <label>Specialties / Services You Can Provide *</label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;">
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; color:var(--fog); font-family:'Barlow',sans-serif; letter-spacing:normal; text-transform:none;">
+              <input type="checkbox" name="specialty_hull" value="Hull Inspection" style="accent-color:var(--cyan);"> Hull Inspection
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; color:var(--fog); font-family:'Barlow',sans-serif; letter-spacing:normal; text-transform:none;">
+              <input type="checkbox" name="specialty_cleaning" value="Hull Cleaning" style="accent-color:var(--cyan);"> Hull Cleaning
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; color:var(--fog); font-family:'Barlow',sans-serif; letter-spacing:normal; text-transform:none;">
+              <input type="checkbox" name="specialty_dock" value="Dock Inspection" style="accent-color:var(--cyan);"> Dock & Structure Inspection
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; color:var(--fog); font-family:'Barlow',sans-serif; letter-spacing:normal; text-transform:none;">
+              <input type="checkbox" name="specialty_propeller" value="Propeller Services" style="accent-color:var(--cyan);"> Propeller Services
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; color:var(--fog); font-family:'Barlow',sans-serif; letter-spacing:normal; text-transform:none;">
+              <input type="checkbox" name="specialty_anodes" value="Anode Replacement" style="accent-color:var(--cyan);"> Anode Replacement
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; color:var(--fog); font-family:'Barlow',sans-serif; letter-spacing:normal; text-transform:none;">
+              <input type="checkbox" name="specialty_salvage" value="Salvage" style="accent-color:var(--cyan);"> Salvage Operations
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; color:var(--fog); font-family:'Barlow',sans-serif; letter-spacing:normal; text-transform:none;">
+              <input type="checkbox" name="specialty_welding" value="Underwater Welding" style="accent-color:var(--cyan);"> Underwater Welding
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; color:var(--fog); font-family:'Barlow',sans-serif; letter-spacing:normal; text-transform:none;">
+              <input type="checkbox" name="specialty_photography" value="Underwater Photography" style="accent-color:var(--cyan);"> Underwater Photography
+            </label>
+          </div>
+        </div>
+        <div class="form-group reveal" style="margin-top:20px;">
+          <label>Brief Bio / Experience Summary *</label>
+          <textarea name="bio" class="form-textarea-shopify" placeholder="Tell us about your diving background, notable projects, military service, or anything else relevant..." required></textarea>
+        </div>
+      </div>
+
+      <!-- Section 4: Equipment -->
+      <div style="background:rgba(2,8,16,0.5); border:1px solid rgba(0,212,255,0.12); padding:32px; margin-bottom:24px;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--cyan); margin-bottom:20px;">04 — Equipment</div>
+        <div class="form-group reveal">
+          <label>Do you own your dive equipment? *</label>
+          <select name="owns_equipment" class="form-select-shopify" required>
+            <option value="">Select...</option>
+            <option value="full">Yes — I have a full kit</option>
+            <option value="partial">Partial — I have some gear</option>
+            <option value="no">No — I would need to source equipment</option>
+          </select>
+        </div>
+        <div class="form-group reveal">
+          <label>Equipment Details</label>
+          <input type="text" name="equipment_details" class="form-input-shopify" placeholder="e.g. Kirby Morgan 37, full surface supply, underwater camera system...">
+        </div>
+        <div class="form-group reveal">
+          <label>Do you have a dive tender / topside support?</label>
+          <select name="has_tender" class="form-select-shopify">
+            <option value="">Select...</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+            <option value="sometimes">Sometimes — depends on the job</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Section 5: Agreement -->
+      <div style="background:rgba(2,8,16,0.5); border:1px solid rgba(0,212,255,0.12); padding:32px; margin-bottom:32px;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--cyan); margin-bottom:20px;">05 — Agreement</div>
+        <div style="background:rgba(0,212,255,0.04); border:1px solid rgba(0,212,255,0.12); padding:20px; margin-bottom:24px; font-size:14px; color:var(--fog); line-height:1.7;">
+          <strong style="color:var(--white);">Hero Divers Network — Contractor Agreement Summary</strong><br><br>
+          By applying, you acknowledge that:<br>
+          • You are an independent contractor, not an employee of Hero Diving & Marine Services<br>
+          • Hero Divers retains a <strong style="color:var(--cyan);">20% platform fee</strong> on all jobs completed through the network<br>
+          • You receive <strong style="color:var(--cyan);">80% of the job value</strong>, paid via Stripe within 2 business days of report approval<br>
+          • All work must be performed to Hero Divers' standardized reporting requirements<br>
+          • You are responsible for maintaining your own certifications, insurance, and equipment<br>
+          • Hero Divers reserves the right to remove divers from the network for quality or conduct issues
+        </div>
+        <label style="display:flex; align-items:flex-start; gap:12px; cursor:pointer; font-size:15px; color:var(--white); font-family:'Barlow',sans-serif; letter-spacing:normal; text-transform:none;">
+          <input type="checkbox" name="agree_terms" id="agreeTerms" style="accent-color:var(--cyan); margin-top:3px; flex-shrink:0;" required>
+          I have read and agree to the Hero Divers contractor terms, including the 80/20 payment structure *
+        </label>
+        <label style="display:flex; align-items:flex-start; gap:12px; cursor:pointer; font-size:15px; color:var(--white); font-family:'Barlow',sans-serif; letter-spacing:normal; text-transform:none; margin-top:12px;">
+          <input type="checkbox" name="agree_accurate" style="accent-color:var(--cyan); margin-top:3px; flex-shrink:0;" required>
+          I confirm that all information provided in this application is accurate and complete *
+        </label>
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn-primary" style="border:none; cursor:pointer; font-size:15px;">Submit Application</button>
+      <p style="margin-top:16px; font-size:13px; color:var(--fog);">Our team reviews applications within 48 hours. You'll receive a confirmation email at the address provided.</p>
+
+    </form>
+  </div>
+</section>
+
+<style>
+  .form-input-shopify {
+    width:100%; padding:12px 16px;
+    background:rgba(2,8,16,0.6); border:1px solid rgba(0,212,255,0.12);
+    color:var(--white); font-family:'Barlow',sans-serif; font-size:15px;
+    transition:border-color 0.3s ease; outline:none;
+  }
+  .form-input-shopify:focus { border-color:var(--cyan); }
+  .form-input-shopify::placeholder { color:var(--fog); opacity:0.6; }
+  .form-select-shopify {
+    width:100%; padding:12px 16px;
+    background:rgba(2,8,16,0.6); border:1px solid rgba(0,212,255,0.12);
+    color:var(--white); font-family:'Barlow',sans-serif; font-size:15px;
+    transition:border-color 0.3s ease; outline:none; appearance:none; cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a9bb5' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 14px center; padding-right:40px;
+  }
+  .form-select-shopify:focus { border-color:var(--cyan); }
+  .form-select-shopify option { background:var(--deep); }
+  .form-textarea-shopify {
+    width:100%; padding:12px 16px; min-height:120px; resize:vertical;
+    background:rgba(2,8,16,0.6); border:1px solid rgba(0,212,255,0.12);
+    color:var(--white); font-family:'Barlow',sans-serif; font-size:15px;
+    transition:border-color 0.3s ease; outline:none;
+  }
+  .form-textarea-shopify:focus { border-color:var(--cyan); }
+  .form-textarea-shopify::placeholder { color:var(--fog); opacity:0.6; }
+</style>
+
+<script>
+document.getElementById('joinForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  const successEl = document.getElementById('formSuccess');
+  const errorEl = document.getElementById('formError');
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+  errorEl.style.display = 'none';
+
+  // Collect specialties
+  const specialties = [];
+  document.querySelectorAll('[name^="specialty_"]:checked').forEach(cb => specialties.push(cb.value));
+
+  const data = {
+    first_name: this.first_name.value,
+    last_name: this.last_name.value,
+    email: this.email.value,
+    phone: this.phone.value,
+    city: this.city.value,
+    state_country: this.state_country.value,
+    service_radius: this.service_radius.value,
+    cert_agency: this.cert_agency.value,
+    cert_number: this.cert_number.value,
+    cert_level: this.cert_level.value,
+    cert_expiry: this.cert_expiry.value,
+    additional_certs: this.additional_certs.value,
+    years_experience: this.years_experience.value,
+    commercial_experience: this.commercial_experience.value,
+    specialties: specialties.join(', '),
+    bio: this.bio.value,
+    owns_equipment: this.owns_equipment.value,
+    equipment_details: this.equipment_details.value,
+    has_tender: this.has_tender.value,
+    status: 'pending'
+  };
+
+  try {
+    const res = await fetch('https://wrqecnvtbqgoezvslrhm.supabase.co/rest/v1/diver_applications', {
+      method: 'POST',
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndycWVjbnZ0YnFnb2V6dnNscmhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NTYyMDQsImV4cCI6MjA4ODIzMjIwNH0.t-v9QmDg_mseob-CRK7M9IwcXZAjoW8NMH6Gz2g80Ts',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndycWVjbnZ0YnFnb2V6dnNscmhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NTYyMDQsImV4cCI6MjA4ODIzMjIwNH0.t-v9QmDg_mseob-CRK7M9IwcXZAjoW8NMH6Gz2g80Ts',
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || 'Submission failed');
+    }
+
+    successEl.style.display = 'block';
+    this.reset();
+    window.scrollTo({ top: successEl.offsetTop - 100, behavior: 'smooth' });
+  } catch(err) {
+    errorEl.textContent = 'Error: ' + err.message + ' — please email info@herodivingandmarine.com to apply.';
+    errorEl.style.display = 'block';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Submit Application';
+});
+</script>
