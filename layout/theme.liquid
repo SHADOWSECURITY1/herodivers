@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ page_title }} - HERO Diving &amp; Marine Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+{{ 'styles.css' | asset_url | stylesheet_tag }}
+{{ content_for_header }}
+</head>
+<body>
+
+<nav id="mainNav">
+  <a href="{{ routes.root_url }}" class="nav-brand">
+    <img src="{{ 'logo.png' | asset_url }}" class="bottlecap-logo" width="50" height="50" alt="HERO Diving and Marine Services">
+    <span class="nav-brand-text">
+      <span class="nav-brand-name">Hero</span>
+      <span class="nav-brand-sub">Diving &amp; Marine Services</span>
+    </span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#services">Services</a></li>
+    <li><a href="/#gear">Gear</a></li>
+    <li><a href="/#training">Training</a></li>
+    <li><a href="/pages/condition-reports">Reports</a></li>
+    <li><a href="/pages/diver-portal">Diver Portal</a></li>
+    <li><a href="/pages/quote" class="nav-cta">Get a Quote</a></li>
+  </ul>
+</nav>
+
+{{ content_for_layout }}
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="{{ routes.root_url }}" class="nav-brand">
+        <img src="{{ 'logo.png' | asset_url }}" class="bottlecap-logo" width="44" height="44" alt="HERO Diving and Marine Services">
+        <span class="nav-brand-text">
+          <span class="nav-brand-name" style="font-size:18px;">Hero</span>
+          <span class="nav-brand-sub">Diving &amp; Marine Services</span>
+        </span>
+      </a>
+      <p class="footer-tagline">Underwater inspection and marine services. Forged by military discipline, driven by the mission to Help Everyone Remain Operational.</p>
+      <div class="footer-acronym">H.E.R.O. · Help Everyone Remain Operational</div>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <a href="/pages/hull-inspection">Hull Inspection</a>
+      <a href="/pages/dock-structures">Dock &amp; Structures</a>
+      <a href="/pages/condition-reports">Condition Reports</a>
+      <a href="/pages/custom-marine-ops">Custom Marine Ops</a>
+    </div>
+    <div class="footer-col">
+      <h4>Training</h4>
+      <a href="/pages/private-lessons">Private Lessons</a>
+      <a href="/pages/group-sessions">Group Sessions</a>
+      <a href="/pages/certifications">Certifications</a>
+      <a href="/pages/travel-training">Travel Training</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="/pages/about">About HERO</a>
+      <a href="/pages/legends">Legends of the Deep</a>
+      <a href="/pages/gear">Shop Gear</a>
+      <a href="/pages/quote">Request a Quote</a>
+      <a href="/pages/contact">Contact</a>
+      <a href="/pages/diver-portal">Diver Portal</a>
+    </div>
+    <div class="footer-col">
+      <h4>HERO Family</h4>
+      <a href="/pages/the-hero-fund">The Hero Fund</a>
+      <a href="/pages/the-hero-foundation">The Hero Foundation</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 Hero Diving and Marine Services. All rights reserved.</div>
+    <div class="footer-badges">
+      <span class="footer-badge">Veteran Owned</span>
+      <span class="footer-badge">Fully Insured</span>
+    </div>
+  </div>
+</footer>
+
+<script src="{{ 'main.js' | asset_url }}"></script>
+</body>
+</html>
