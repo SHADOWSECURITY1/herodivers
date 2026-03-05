@@ -18,7 +18,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON' }) };
   }
 
-  const { reportId, reportData, clientEmail, clientName, vesselName, diverName } = body;
+  const { reportId, reportData, clientEmail, clientName, vesselName, diverName, beforeMedia = [], afterMedia = [] } = body;
 
   if (!clientEmail) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Client email is required' }) };
@@ -161,6 +161,39 @@ exports.handler = async (event) => {
           <div style="font-size:18px; font-weight:bold; color:${priorityColor}; margin-bottom:16px;">${d.action_priority}</div>` : ''}
           ${d.recommendations ? `<div style="font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#8a9bb5; margin-bottom:8px;">Details</div>
           <div style="font-size:14px; color:#f0f4f8; line-height:1.6;">${d.recommendations}</div>` : ''}
+        </div>
+      </div>` : ''}
+
+      ${(beforeMedia.length > 0 || afterMedia.length > 0) ? `
+      <div style="margin-bottom:24px;">
+        <div style="background:#0c2340; padding:10px 16px; border-left:3px solid #00d4ff; margin-bottom:0;">
+          <span style="font-family:Georgia,serif; font-size:13px; letter-spacing:3px; text-transform:uppercase; color:#00d4ff;">Job Photos &amp; Video</span>
+        </div>
+        <div style="background:#071422; padding:20px 16px;">
+          ${beforeMedia.length > 0 ? `
+          <div style="margin-bottom:16px;">
+            <div style="font-size:10px; letter-spacing:3px; text-transform:uppercase; color:#8a9bb5; margin-bottom:10px;">Before Dive</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              ${beforeMedia.filter(m => m.type === 'image').map(m =>
+                `<img src="${m.url}" width="200" style="height:150px; object-fit:cover; border:1px solid rgba(0,212,255,0.15);" alt="Before">`
+              ).join('')}
+              ${beforeMedia.filter(m => m.type === 'video').map(m =>
+                `<div style="padding:8px 0;"><a href="${m.url}" style="color:#00d4ff; font-size:13px; text-decoration:none;">▶ View Before Video</a></div>`
+              ).join('')}
+            </div>
+          </div>` : ''}
+          ${afterMedia.length > 0 ? `
+          <div>
+            <div style="font-size:10px; letter-spacing:3px; text-transform:uppercase; color:#8a9bb5; margin-bottom:10px;">After Dive</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              ${afterMedia.filter(m => m.type === 'image').map(m =>
+                `<img src="${m.url}" width="200" style="height:150px; object-fit:cover; border:1px solid rgba(0,212,255,0.15);" alt="After">`
+              ).join('')}
+              ${afterMedia.filter(m => m.type === 'video').map(m =>
+                `<div style="padding:8px 0;"><a href="${m.url}" style="color:#00d4ff; font-size:13px; text-decoration:none;">▶ View After Video</a></div>`
+              ).join('')}
+            </div>
+          </div>` : ''}
         </div>
       </div>` : ''}
 

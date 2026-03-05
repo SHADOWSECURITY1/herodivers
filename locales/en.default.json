@@ -1,0 +1,11 @@
+{
+  "general": {
+    "password_page": {
+      "login_form_heading": "Enter store password",
+      "login_form_password_label": "Password",
+      "login_form_password_placeholder": "Your password",
+      "login_form_submit": "Enter",
+      "powered_by_shopify_html": "This shop is powered by {{shopify}}"
+    }
+  }
+}

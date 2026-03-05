@@ -161,6 +161,9 @@
           <div class="report-section-title">Special Instructions</div>
           <div style="padding:20px; color:var(--fog); font-size:14px; line-height:1.7;">${job.description}</div>
         </div>` : ''}
+
+      <!-- Media gallery populated after render -->
+      <div id="mediaGallery"></div>
     `;
 
     // Pay button handler (vessel owner)
@@ -243,7 +246,48 @@
       return;
     }
 
-    renderJob(job, userRole, userId);
+    await renderJob(job, userRole, userId);
+    await loadMediaGallery(jobId);
+  }
+
+  async function loadMediaGallery(jobId) {
+    const { data: media } = await supabase
+      .from('job_media')
+      .select('*')
+      .eq('job_id', jobId)
+      .order('created_at');
+
+    const container = document.getElementById('mediaGallery');
+    if (!container) return;
+
+    const before = (media || []).filter(m => m.media_type === 'before');
+    const after  = (media || []).filter(m => m.media_type === 'after');
+
+    if (before.length === 0 && after.length === 0) return;
+
+    function mediaGrid(items) {
+      if (items.length === 0) return '<div class="media-gallery-empty">None uploaded</div>';
+      return `<div class="media-gallery-grid">${items.map(m =>
+        m.file_type === 'video'
+          ? `<div class="media-gallery-item"><video src="${m.file_url}" controls preload="metadata"></video></div>`
+          : `<div class="media-gallery-item"><a href="${m.file_url}" target="_blank"><img src="${m.file_url}" alt="${m.file_name || 'Photo'}"></a></div>`
+      ).join('')}</div>`;
+    }
+
+    container.innerHTML = `
+      <div class="report-section media-gallery" style="margin-top:24px;">
+        <div class="report-section-title">Job Photos &amp; Video</div>
+        <div style="padding:20px;">
+          <div class="media-gallery-section">
+            <div class="media-gallery-label">Before Dive</div>
+            ${mediaGrid(before)}
+          </div>
+          <div class="media-gallery-section">
+            <div class="media-gallery-label">After Dive</div>
+            ${mediaGrid(after)}
+          </div>
+        </div>
+      </div>`;
   }
 
   document.getElementById('signOutBtn').addEventListener('click', signOut);

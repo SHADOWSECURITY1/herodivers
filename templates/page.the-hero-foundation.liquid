@@ -1,0 +1,438 @@
+<style>
+  :root {
+    --gold: #D4A843;
+    --gold-dim: rgba(212,168,67,0.15);
+    --gold-glow: rgba(212,168,67,0.08);
+    --fund-dark: #0A0A0F;
+    --fund-deep: #111118;
+    --fund-card: #141420;
+    --fund-border: rgba(212,168,67,0.12);
+  }
+
+  .foundation-page { background: var(--fund-dark); color: var(--white); font-family: 'Barlow', sans-serif; }
+
+  .foundation-hero {
+    min-height: 85vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 140px 48px 100px;
+    position: relative; overflow: hidden;
+    background: radial-gradient(ellipse at 50% 0%, rgba(212,168,67,0.10) 0%, transparent 60%),
+                linear-gradient(180deg, #060609 0%, #0A0A0F 100%);
+  }
+
+  .foundation-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 12px;
+    letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); border: 1px solid var(--fund-border);
+    padding: 8px 20px; margin-bottom: 36px;
+  }
+
+  .foundation-badge::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--gold); border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }
+
+  .foundation-hero h1 {
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: clamp(52px, 8vw, 110px);
+    line-height: 0.9; text-transform: uppercase; letter-spacing: -2px; margin-bottom: 28px;
+  }
+
+  .foundation-hero h1 em { font-style: normal; color: var(--gold); }
+
+  .foundation-hero-sub {
+    font-weight: 300; font-size: 20px; line-height: 1.7;
+    color: var(--fog); max-width: 640px; margin: 0 auto 48px;
+  }
+
+  .foundation-hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  .btn-gold {
+    display: inline-block; padding: 16px 48px;
+    background: var(--gold); color: #0A0A0F;
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: 14px; letter-spacing: 3px; text-transform: uppercase;
+    text-decoration: none; transition: all 0.3s ease;
+    clip-path: polygon(0 0, 100% 0, 96% 100%, 0 100%); padding-right: 56px;
+  }
+
+  .btn-gold:hover { background: #e8ba50; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(212,168,67,0.3); color: #0A0A0F; }
+
+  .btn-fund-ghost {
+    display: inline-block; padding: 16px 36px;
+    background: transparent; color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 500;
+    font-size: 14px; letter-spacing: 3px; text-transform: uppercase;
+    text-decoration: none; border: 1px solid rgba(240,244,248,0.2); transition: all 0.3s ease;
+  }
+
+  .btn-fund-ghost:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-glow); }
+
+  .foundation-stats {
+    background: var(--fund-deep);
+    border-top: 1px solid var(--fund-border);
+    border-bottom: 1px solid var(--fund-border);
+    padding: 48px; display: flex; justify-content: center; flex-wrap: wrap;
+  }
+
+  .foundation-stat { text-align: center; flex: 1; min-width: 160px; padding: 0 32px; border-right: 1px solid var(--fund-border); }
+  .foundation-stat:last-child { border-right: none; }
+
+  .foundation-stat-num {
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: 52px; line-height: 1; color: var(--gold); margin-bottom: 6px;
+  }
+
+  .foundation-stat-label {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 400;
+    font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--fog);
+  }
+
+  .f-section { padding: 100px 48px; position: relative; overflow: hidden; }
+  .f-section.dark { background: var(--fund-dark); }
+  .f-section.deep { background: var(--fund-deep); }
+  .f-wrap { max-width: 1100px; margin: 0 auto; position: relative; z-index: 5; }
+
+  .f-tag {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 500;
+    font-size: 13px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--gold); display: flex; align-items: center; gap: 16px; margin-bottom: 16px;
+  }
+
+  .f-tag::before { content: ''; width: 30px; height: 1px; background: var(--gold); }
+
+  .f-section h2 {
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: clamp(36px, 5vw, 68px); line-height: 0.95;
+    text-transform: uppercase; letter-spacing: -1px; margin-bottom: 24px;
+  }
+
+  .f-section h2 em { font-style: normal; color: var(--gold); }
+
+  .f-section p {
+    font-weight: 300; font-size: 18px; line-height: 1.8;
+    color: var(--fog); max-width: 680px; margin-bottom: 20px;
+  }
+
+  .f-section p strong { color: var(--white); font-weight: 500; }
+
+  .pillars-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 2px; margin-top: 48px;
+  }
+
+  .f-pillar {
+    background: var(--fund-card); border: 1px solid var(--fund-border);
+    padding: 32px 24px; text-align: center; transition: all 0.3s ease;
+  }
+
+  .f-pillar:hover { border-color: var(--gold); background: var(--gold-glow); }
+
+  .f-pillar-letter {
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: 72px; line-height: 1; color: var(--gold); opacity: 0.8; margin-bottom: 12px;
+  }
+
+  .f-pillar-word {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 18px; text-transform: uppercase; letter-spacing: 2px;
+    color: var(--white); margin-bottom: 10px;
+  }
+
+  .f-pillar-desc { font-size: 14px; line-height: 1.6; color: var(--fog); margin: 0; }
+
+  .programs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+
+  .program-card {
+    background: var(--fund-card); border: 1px solid var(--fund-border);
+    padding: 40px 32px; transition: all 0.4s ease; position: relative; overflow: hidden;
+  }
+
+  .program-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
+  }
+
+  .program-card:hover::before { transform: scaleX(1); }
+  .program-card:hover { border-color: var(--gold); transform: translateY(-3px); }
+
+  .program-icon { font-size: 36px; margin-bottom: 20px; display: block; }
+
+  .program-card h3 {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 20px; text-transform: uppercase; letter-spacing: 2px;
+    color: var(--gold); margin-bottom: 12px;
+  }
+
+  .program-card p { font-size: 15px; line-height: 1.7; color: var(--fog); margin: 0; }
+
+  .impact-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; margin-top: 48px; }
+
+  .impact-item {
+    background: var(--fund-card); border: 1px solid var(--fund-border);
+    padding: 36px; display: flex; gap: 24px; align-items: flex-start;
+    transition: border-color 0.3s ease;
+  }
+
+  .impact-item:hover { border-color: var(--gold); }
+
+  .impact-num {
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: 52px; line-height: 1; color: rgba(212,168,67,0.2); flex-shrink: 0;
+  }
+
+  .impact-item h3 {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 18px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--white); margin-bottom: 8px;
+  }
+
+  .impact-item p { font-size: 15px; line-height: 1.7; color: var(--fog); margin: 0; }
+
+  .ways-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+
+  .way-card {
+    background: var(--fund-card); border: 1px solid var(--fund-border);
+    padding: 40px 32px; text-align: center; transition: all 0.3s ease;
+  }
+
+  .way-card:hover { border-color: var(--gold); background: var(--gold-glow); }
+
+  .way-icon { font-size: 40px; margin-bottom: 20px; display: block; }
+
+  .way-card h3 {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 20px; text-transform: uppercase; letter-spacing: 2px;
+    color: var(--white); margin-bottom: 12px;
+  }
+
+  .way-card p { font-size: 15px; line-height: 1.7; color: var(--fog); margin: 0 0 24px; }
+
+  .foundation-cta {
+    padding: 120px 48px; text-align: center; position: relative; overflow: hidden;
+    background: radial-gradient(ellipse at 50% 50%, rgba(212,168,67,0.08) 0%, transparent 60%),
+                linear-gradient(180deg, var(--fund-deep), var(--fund-dark));
+  }
+
+  .foundation-cta h2 {
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: clamp(44px, 6vw, 80px); line-height: 0.95;
+    text-transform: uppercase; letter-spacing: -2px; margin-bottom: 20px;
+  }
+
+  .foundation-cta p {
+    font-weight: 300; font-size: 18px; color: var(--fog);
+    max-width: 520px; margin: 0 auto 40px; line-height: 1.6;
+  }
+
+  .foundation-cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  @media (max-width: 768px) {
+    .foundation-hero { padding: 120px 24px 80px; }
+    .foundation-stats { flex-direction: column; }
+    .foundation-stat { border-right: none; border-bottom: 1px solid var(--fund-border); padding: 24px 0; }
+    .foundation-stat:last-child { border-bottom: none; }
+    .f-section { padding: 64px 24px; }
+    .pillars-grid { grid-template-columns: repeat(2, 1fr); }
+    .programs-grid, .ways-grid { grid-template-columns: 1fr; }
+    .impact-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="foundation-page">
+
+  <!-- ═══ HERO ═══ -->
+  <section class="foundation-hero">
+    <div>
+      <div class="foundation-badge reveal">501(c)(3) Non-Profit Organization</div>
+      <h1 class="reveal reveal-delay-1">BUILT FOR<br><em>THOSE WHO SERVED.</em></h1>
+      <p class="foundation-hero-sub reveal reveal-delay-2">The Hero Foundation funds education, emergency relief, and entrepreneurial pathways for veterans, first responders, and underserved communities. Because those who protect others deserve to be protected too.</p>
+      <div class="foundation-hero-actions reveal reveal-delay-3">
+        <a href="/pages/contact" class="btn-gold">Donate Now</a>
+        <a href="#programs" class="btn-fund-ghost">See Our Programs</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ STATS ═══ -->
+  <div class="foundation-stats">
+    <div class="foundation-stat reveal">
+      <div class="foundation-stat-num">500<span style="font-size:28px;">+</span></div>
+      <div class="foundation-stat-label">Veterans Supported</div>
+    </div>
+    <div class="foundation-stat reveal reveal-delay-1">
+      <div class="foundation-stat-num">12</div>
+      <div class="foundation-stat-label">Community Partners</div>
+    </div>
+    <div class="foundation-stat reveal reveal-delay-2">
+      <div class="foundation-stat-num">100<span style="font-size:28px;">%</span></div>
+      <div class="foundation-stat-label">Mission Driven</div>
+    </div>
+    <div class="foundation-stat reveal reveal-delay-3">
+      <div class="foundation-stat-num">4</div>
+      <div class="foundation-stat-label">Core Programs</div>
+    </div>
+  </div>
+
+  <!-- ═══ MISSION ═══ -->
+  <section class="f-section dark">
+    <div class="f-wrap">
+      <div class="f-tag reveal">Our Mission</div>
+      <h2 class="reveal reveal-delay-1">HELP EVERYONE<br><em>REMAIN OPERATIONAL</em><sup style="font-size:18px; color:var(--fog);">®</sup></h2>
+      <p class="reveal reveal-delay-2">The Hero Foundation is the charitable arm of the HERO family. We believe that the men and women who dedicate their lives to service — military, law enforcement, first responders — deserve the same mission-first support they gave to others. Our programs provide <strong>emergency relief, scholarships, and entrepreneurial infrastructure</strong> to help heroes transition, rebuild, and thrive.</p>
+      <p class="reveal reveal-delay-3">Every dollar donated goes directly to the people who need it most. No bureaucracy. No red tape. Just mission execution.</p>
+
+      <div class="pillars-grid">
+        <div class="f-pillar reveal">
+          <div class="f-pillar-letter">H</div>
+          <div class="f-pillar-word">Help</div>
+          <p class="f-pillar-desc">Direct financial assistance to those in crisis</p>
+        </div>
+        <div class="f-pillar reveal reveal-delay-1">
+          <div class="f-pillar-letter">E</div>
+          <div class="f-pillar-word">Everyone</div>
+          <p class="f-pillar-desc">Veterans, first responders, and underserved families</p>
+        </div>
+        <div class="f-pillar reveal reveal-delay-2">
+          <div class="f-pillar-letter">R</div>
+          <div class="f-pillar-word">Remain</div>
+          <p class="f-pillar-desc">Long-term stability, not short-term fixes</p>
+        </div>
+        <div class="f-pillar reveal reveal-delay-3">
+          <div class="f-pillar-letter">O</div>
+          <div class="f-pillar-word">Operational</div>
+          <p class="f-pillar-desc">Resources and pathways to keep heroes moving forward</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PROGRAMS ═══ -->
+  <section class="f-section deep" id="programs">
+    <div class="f-wrap">
+      <div class="f-tag reveal">Core Programs</div>
+      <h2 class="reveal reveal-delay-1">WHERE YOUR<br><em>SUPPORT GOES</em></h2>
+      <p class="reveal reveal-delay-2">Every program is built with one objective: keep heroes operational. From emergency relief to education to entrepreneurship, we cover the full spectrum of need.</p>
+
+      <div class="programs-grid">
+        <div class="program-card reveal">
+          <span class="program-icon">🎖️</span>
+          <h3>Veteran Relief Fund</h3>
+          <p>Emergency financial assistance for veterans facing housing, medical, or family crises. Fast-tracked approval, zero red tape. When a hero calls, we answer.</p>
+        </div>
+        <div class="program-card reveal reveal-delay-1">
+          <span class="program-icon">🎓</span>
+          <h3>Hero Scholarship Program</h3>
+          <p>Full and partial scholarships for veterans, first responders, and their dependents pursuing higher education, trade certifications, or professional development.</p>
+        </div>
+        <div class="program-card reveal reveal-delay-2">
+          <span class="program-icon">🚀</span>
+          <h3>Entrepreneurship Pipeline</h3>
+          <p>Partnered with The Hero Fund, we provide business education, mentorship, and seed funding pathways for veteran entrepreneurs ready to build something of their own.</p>
+        </div>
+        <div class="program-card reveal reveal-delay-3">
+          <span class="program-icon">🌊</span>
+          <h3>Community Outreach</h3>
+          <p>Local events, wellness programs, and peer support networks connecting heroes with each other and with the resources they need to stay strong.</p>
+        </div>
+        <div class="program-card reveal reveal-delay-4">
+          <span class="program-icon">🛡️</span>
+          <h3>First Responder Support</h3>
+          <p>Mental health resources, critical incident support, and financial assistance for active and retired law enforcement, firefighters, and EMS personnel.</p>
+        </div>
+        <div class="program-card reveal">
+          <span class="program-icon">🤝</span>
+          <h3>Family Assistance Program</h3>
+          <p>Support for the families of deployed, injured, or fallen service members. Because those who wait at home carry the mission too.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ IMPACT ═══ -->
+  <section class="f-section dark">
+    <div class="f-wrap">
+      <div class="f-tag reveal">Our Impact</div>
+      <h2 class="reveal reveal-delay-1">MISSION<br><em>RESULTS</em></h2>
+
+      <div class="impact-grid">
+        <div class="impact-item reveal">
+          <div class="impact-num">01</div>
+          <div>
+            <h3>Direct Financial Relief</h3>
+            <p>Over $500,000 distributed in emergency grants to veterans and first responders facing housing, medical, and family crises across the country.</p>
+          </div>
+        </div>
+        <div class="impact-item reveal reveal-delay-1">
+          <div class="impact-num">02</div>
+          <div>
+            <h3>Education Funded</h3>
+            <p>Scholarships awarded to veterans and their families pursuing degrees, certifications, and trade programs to build new careers after service.</p>
+          </div>
+        </div>
+        <div class="impact-item reveal reveal-delay-2">
+          <div class="impact-num">03</div>
+          <div>
+            <h3>Businesses Launched</h3>
+            <p>Veteran entrepreneurs guided through our entrepreneurship pipeline have launched sustainable businesses that now employ fellow veterans in their communities.</p>
+          </div>
+        </div>
+        <div class="impact-item reveal reveal-delay-3">
+          <div class="impact-num">04</div>
+          <div>
+            <h3>Community Built</h3>
+            <p>A growing network of heroes supporting heroes — peer mentors, business partners, and friends who understand the mission because they lived it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ HOW TO HELP ═══ -->
+  <section class="f-section deep">
+    <div class="f-wrap">
+      <div class="f-tag reveal">Get Involved</div>
+      <h2 class="reveal reveal-delay-1">THREE WAYS TO<br><em>JOIN THE MISSION</em></h2>
+      <p class="reveal reveal-delay-2">Whether you give, volunteer, or partner with us — every contribution directly fuels a hero's next chapter.</p>
+
+      <div class="ways-grid">
+        <div class="way-card reveal">
+          <span class="way-icon">💛</span>
+          <h3>Donate</h3>
+          <p>100% of your donation funds our programs. No excessive overhead, no bureaucracy. Your dollars go directly to heroes who need them.</p>
+          <a href="/pages/contact" class="btn-gold" style="display:inline-block; padding:12px 32px; font-size:13px; clip-path:none; padding-right:32px;">Give Now</a>
+        </div>
+        <div class="way-card reveal reveal-delay-1">
+          <span class="way-icon">🙋</span>
+          <h3>Volunteer</h3>
+          <p>Share your skills — legal, financial, marketing, mentorship — with the veterans and entrepreneurs in our programs. Time is one of the greatest gifts.</p>
+          <a href="/pages/contact" class="btn-gold" style="display:inline-block; padding:12px 32px; font-size:13px; clip-path:none; padding-right:32px;">Get Involved</a>
+        </div>
+        <div class="way-card reveal reveal-delay-2">
+          <span class="way-icon">🏢</span>
+          <h3>Corporate Partnership</h3>
+          <p>Align your brand with the HERO mission. Corporate sponsorships, matching gift programs, and co-branded initiatives that make real impact.</p>
+          <a href="/pages/contact" class="btn-gold" style="display:inline-block; padding:12px 32px; font-size:13px; clip-path:none; padding-right:32px;">Partner With Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="foundation-cta">
+    <div class="f-tag reveal" style="justify-content:center;"><span></span>The Mission Continues</div>
+    <h2 class="reveal reveal-delay-1">STAND WITH<br><em style="color:var(--gold);">YOUR HEROES.</em></h2>
+    <p class="reveal reveal-delay-2">These men and women gave everything. Now it's our turn. Join the Foundation and help us keep every hero operational — on and off the field.</p>
+    <div class="foundation-cta-buttons reveal reveal-delay-3">
+      <a href="/pages/contact" class="btn-gold">Donate Now</a>
+      <a href="/pages/about" class="btn-fund-ghost">Learn More About HERO</a>
+    </div>
+  </section>
+
+</div>

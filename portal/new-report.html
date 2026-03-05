@@ -476,12 +476,39 @@
         </div>
       </div>
 
-      <!-- SECTION 9: Diver Certification -->
+      <!-- SECTION 9: Media & Certification -->
       <div class="form-section" data-section="9">
         <div class="section-header">
           <div class="section-num">Section 9 of 9</div>
-          <div class="section-title">Diver Certification</div>
+          <div class="section-title">Job Media &amp; Certification</div>
         </div>
+
+        <!-- Before / After Media Upload -->
+        <div id="mediaSection" style="margin-bottom:28px;">
+          <div class="report-section-title" style="margin-bottom:4px;">Before &amp; After Media</div>
+          <div style="font-size:12px; color:var(--fog); margin-bottom:16px;">Optional — photos and videos included in the client's report email.</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div>
+              <div style="font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--fog); margin-bottom:8px;">Before Dive</div>
+              <div class="media-upload-area" id="beforeDropZone">
+                <div class="media-upload-icon">📷</div>
+                <div class="media-upload-text"><strong>Drop files or click</strong><br>JPG · PNG · MP4 · MOV</div>
+                <input type="file" id="beforeFileInput" multiple accept="image/jpeg,image/png,image/webp,image/heic,video/mp4,video/quicktime,video/webm" style="display:none;">
+              </div>
+              <div class="media-preview-grid" id="beforePreview"></div>
+            </div>
+            <div>
+              <div style="font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--fog); margin-bottom:8px;">After Dive</div>
+              <div class="media-upload-area" id="afterDropZone">
+                <div class="media-upload-icon">✅</div>
+                <div class="media-upload-text"><strong>Drop files or click</strong><br>JPG · PNG · MP4 · MOV</div>
+                <input type="file" id="afterFileInput" multiple accept="image/jpeg,image/png,image/webp,image/heic,video/mp4,video/quicktime,video/webm" style="display:none;">
+              </div>
+              <div class="media-preview-grid" id="afterPreview"></div>
+            </div>
+          </div>
+        </div>
+
         <div class="form-grid">
           <div class="form-group">
             <label class="form-label">Diver Name</label>
@@ -535,6 +562,8 @@
   let currentSection = 1;
   let session = null;
   let activeJobId = null; // set if launched from a job
+  const beforeFiles = [];
+  const afterFiles = [];
 
   function toast(msg, type = 'info') {
     const c = document.getElementById('toastContainer');
@@ -570,6 +599,72 @@
     return data;
   }
 
+  function setupUploadZone(dropZoneId, inputId, filesArr, previewId) {
+    const dropZone = document.getElementById(dropZoneId);
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+
+    dropZone.addEventListener('click', () => input.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      addFiles([...e.dataTransfer.files]);
+    });
+    input.addEventListener('change', () => { addFiles([...input.files]); input.value = ''; });
+
+    function addFiles(newFiles) {
+      newFiles.forEach(file => {
+        filesArr.push(file);
+        const isVideo = file.type.startsWith('video/');
+        const objectUrl = URL.createObjectURL(file);
+        const thumb = document.createElement('div');
+        thumb.className = 'media-thumb';
+        thumb.innerHTML = isVideo
+          ? `<video src="${objectUrl}" preload="metadata"></video>`
+          : `<img src="${objectUrl}" alt="">`;
+        thumb.innerHTML += `<div class="media-thumb-type">${isVideo ? '▶ Video' : '📷 Photo'}</div>
+          <button class="media-thumb-remove" title="Remove">✕</button>`;
+        thumb.querySelector('.media-thumb-remove').addEventListener('click', () => {
+          const idx = filesArr.indexOf(file);
+          if (idx > -1) filesArr.splice(idx, 1);
+          URL.revokeObjectURL(objectUrl);
+          thumb.remove();
+        });
+        preview.appendChild(thumb);
+      });
+    }
+  }
+
+  async function uploadJobMedia(jobId, files, type) {
+    const results = [];
+    for (const file of files) {
+      const ext = file.name.split('.').pop().toLowerCase();
+      const prefix = jobId || 'standalone';
+      const path = `${prefix}/${type}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { data, error } = await supabase.storage
+        .from('job-media')
+        .upload(path, file, { contentType: file.type });
+      if (!error) {
+        const { data: { publicUrl } } = supabase.storage.from('job-media').getPublicUrl(data.path);
+        if (jobId) {
+          await supabase.from('job_media').insert({
+            job_id: jobId,
+            uploaded_by: session.user.id,
+            media_type: type,
+            file_url: publicUrl,
+            file_type: file.type.startsWith('video/') ? 'video' : 'image',
+            file_name: file.name,
+            storage_path: data.path
+          });
+        }
+        results.push({ url: publicUrl, type: file.type.startsWith('video/') ? 'video' : 'image' });
+      }
+    }
+    return results;
+  }
+
   async function saveReport(status) {
     const formData = collectFormData();
     const payload = {
@@ -596,6 +691,10 @@
 
     // Set today's date
     document.querySelector('[name="inspection_date"]').value = new Date().toISOString().split('T')[0];
+
+    // Setup before/after upload zones
+    setupUploadZone('beforeDropZone', 'beforeFileInput', beforeFiles, 'beforePreview');
+    setupUploadZone('afterDropZone', 'afterFileInput', afterFiles, 'afterPreview');
 
     // Pre-fill from job if ?jobId is in URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -661,9 +760,16 @@
 
       const btn = document.getElementById('saveAndSendBtn');
       btn.disabled = true;
-      btn.textContent = 'Sending...';
+      btn.textContent = 'Uploading Media...';
 
       try {
+        // Upload before/after media to Supabase Storage
+        const [beforeMedia, afterMedia] = await Promise.all([
+          uploadJobMedia(activeJobId, beforeFiles, 'before'),
+          uploadJobMedia(activeJobId, afterFiles, 'after')
+        ]);
+
+        btn.textContent = 'Sending Report...';
         const report = await saveReport('draft');
         const formData = collectFormData();
         const profile = await getProfile(session.user.id);
@@ -678,7 +784,9 @@
             clientEmail: formData.client_email,
             clientName: formData.client_name,
             vesselName: formData.vessel_name,
-            diverName: profile?.full_name || formData.diver_name
+            diverName: profile?.full_name || formData.diver_name,
+            beforeMedia,
+            afterMedia
           })
         });
 

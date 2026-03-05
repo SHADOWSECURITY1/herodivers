@@ -1,0 +1,773 @@
+<style>
+  /* ═══════════════════════════════════════════
+     20,000 LEAGUES AESTHETIC OVERRIDES
+     Brass, rivets, portholes, deep sea wonder
+     ═══════════════════════════════════════════ */
+
+  :root {
+    --brass: #b8943e;
+    --brass-light: #d4af5a;
+    --brass-dark: #8a6d2b;
+    --patina: #4a7a6a;
+    --copper: #b87333;
+    --parchment: #e8dcc8;
+    --ink: #1a1812;
+  }
+
+  .porthole-img {
+    position: absolute;
+    top: 6px; left: 6px;
+    width: calc(100% - 12px);
+    height: calc(100% - 12px);
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 20%;
+    z-index: 2;
+    filter: saturate(0.7) contrast(1.1);
+    opacity: 0.85;
+    transition: all 0.5s ease;
+  }
+
+  .legend-card:hover .porthole-img {
+    filter: saturate(1) contrast(1.1);
+    opacity: 1;
+  }
+
+  /* ── PORTHOLE CARD ── */
+  .legend-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 48px;
+    align-items: center;
+    padding: 56px 48px;
+    margin-bottom: 2px;
+    background: rgba(8,24,48,0.6);
+    border: 1px solid rgba(184,148,62,0.1);
+    backdrop-filter: blur(8px);
+    transition: all 0.5s ease;
+    overflow: hidden;
+  }
+
+  .legend-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(180deg, var(--brass), var(--brass-dark), transparent);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.5s ease;
+  }
+
+  .legend-card:hover::before { transform: scaleY(1); }
+
+  .legend-card:hover {
+    background: rgba(184,148,62,0.04);
+    border-color: rgba(184,148,62,0.2);
+  }
+
+  /* Brass rivets on card corners */
+  .legend-card::after {
+    content: '';
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, var(--brass-light), var(--brass-dark));
+    box-shadow:
+      0 0 0 1px rgba(184,148,62,0.3),
+      calc(-100% + 24px) 0 0 0 transparent;
+  }
+
+  /* ── PORTHOLE FRAME ── */
+  .porthole {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    flex-shrink: 0;
+  }
+
+  .porthole-frame {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 6px solid var(--brass);
+    background: radial-gradient(circle at 40% 35%,
+      rgba(0,212,255,0.08) 0%,
+      rgba(12,35,64,0.9) 50%,
+      rgba(4,8,16,0.95) 100%
+    );
+    box-shadow:
+      inset 0 0 30px rgba(0,0,0,0.5),
+      inset 0 0 60px rgba(0,212,255,0.05),
+      0 0 20px rgba(184,148,62,0.1);
+    overflow: hidden;
+  }
+
+  /* Glass reflection */
+  .porthole-frame::before {
+    content: '';
+    position: absolute;
+    top: 8%; left: 12%;
+    width: 35%; height: 20%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent);
+    border-radius: 50%;
+    transform: rotate(-20deg);
+  }
+
+  /* Water caustic inside porthole */
+  .porthole-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+      radial-gradient(ellipse at 60% 70%, rgba(0,212,255,0.06) 0%, transparent 50%);
+    animation: portholeCaustic 6s ease-in-out infinite;
+  }
+
+  @keyframes portholeCaustic {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1) rotate(5deg); }
+  }
+
+  /* Bolts around porthole */
+  .porthole-bolts {
+    position: absolute;
+    inset: -3px;
+  }
+
+  .porthole-bolt {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, var(--brass-light), var(--brass-dark));
+    border: 1px solid rgba(184,148,62,0.4);
+  }
+
+  .porthole-bolt:nth-child(1) { top: 5%; left: 50%; transform: translateX(-50%); }
+  .porthole-bolt:nth-child(2) { top: 50%; right: 3%; transform: translateY(-50%); }
+  .porthole-bolt:nth-child(3) { bottom: 5%; left: 50%; transform: translateX(-50%); }
+  .porthole-bolt:nth-child(4) { top: 50%; left: 3%; transform: translateY(-50%); }
+  .porthole-bolt:nth-child(5) { top: 15%; right: 12%; }
+  .porthole-bolt:nth-child(6) { bottom: 15%; right: 12%; }
+  .porthole-bolt:nth-child(7) { bottom: 15%; left: 12%; }
+  .porthole-bolt:nth-child(8) { top: 15%; left: 12%; }
+
+  .porthole-icon {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 64px;
+    z-index: 2;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  }
+
+  /* ── LEGEND INFO ── */
+  .legend-info { position: relative; z-index: 2; }
+
+  .legend-era {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .legend-era::before {
+    content: '';
+    width: 20px; height: 1px;
+    background: var(--brass);
+  }
+
+  .legend-name {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 3vw, 42px);
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    transition: color 0.3s ease;
+  }
+
+  .legend-card:hover .legend-name { color: var(--brass-light); }
+
+  .legend-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 16px;
+  }
+
+  .legend-bio {
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--fog);
+    margin-bottom: 20px;
+    max-width: 600px;
+  }
+
+  .legend-feats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .legend-feat {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--brass);
+    padding: 5px 14px;
+    border: 1px solid rgba(184,148,62,0.2);
+    background: rgba(184,148,62,0.04);
+  }
+
+  /* ── ERA DIVIDER ── */
+  .era-divider {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 48px 0 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .era-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(184,148,62,0.3), transparent);
+  }
+
+  .era-divider-label {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--brass);
+    white-space: nowrap;
+  }
+
+  /* ── NAUTICAL COMPASS HERO ELEMENT ── */
+  .compass-container {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 400px;
+    height: 400px;
+    opacity: 0.04;
+    z-index: 1;
+  }
+
+  .compass-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--brass);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .compass-ring:nth-child(1) {
+    width: 100%; height: 100%;
+    animation: compassSpin 40s linear infinite;
+  }
+
+  .compass-ring:nth-child(2) {
+    width: 70%; height: 70%;
+    border-style: dashed;
+    animation: compassSpin 30s linear infinite reverse;
+  }
+
+  .compass-ring:nth-child(3) {
+    width: 40%; height: 40%;
+    animation: compassSpin 20s linear infinite;
+  }
+
+  @keyframes compassSpin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  /* ── VINTAGE QUOTE BLOCK ── */
+  .vintage-quote {
+    text-align: center;
+    padding: 80px 48px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(184,148,62,0.02) 0%, transparent 50%, rgba(184,148,62,0.02) 100%);
+    border-top: 1px solid rgba(184,148,62,0.08);
+    border-bottom: 1px solid rgba(184,148,62,0.08);
+    margin: 0 auto;
+    max-width: 1000px;
+  }
+
+  .vintage-quote blockquote {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: clamp(22px, 3vw, 36px);
+    line-height: 1.3;
+    text-transform: uppercase;
+    color: var(--parchment);
+    max-width: 700px;
+    margin: 0 auto 16px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .vintage-quote blockquote .em {
+    color: var(--brass-light);
+    font-style: normal;
+  }
+
+  .vintage-quote cite {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--fog);
+    font-style: normal;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .legend-card {
+      grid-template-columns: 1fr;
+      text-align: center;
+      padding: 40px 24px;
+      gap: 24px;
+    }
+    .porthole { margin: 0 auto; width: 160px; height: 160px; }
+    .legend-era { justify-content: center; }
+    .legend-feats { justify-content: center; }
+    .legend-bio { max-width: 100%; }
+    .compass-container { display: none; }
+  }
+</style>
+
+<!-- ═══════ PAGE HERO ═══════ -->
+<section class="page-hero" style="min-height: 55vh;">
+  <div class="page-hero-ocean"></div>
+  <div class="god-rays">
+    <div class="god-ray" style="background: linear-gradient(180deg, rgba(184,148,62,0.04) 0%, rgba(0,212,255,0.02) 40%, transparent 80%);"></div>
+    <div class="god-ray" style="background: linear-gradient(180deg, rgba(184,148,62,0.03) 0%, rgba(0,212,255,0.015) 40%, transparent 80%);"></div>
+    <div class="god-ray" style="background: linear-gradient(180deg, rgba(184,148,62,0.05) 0%, rgba(0,212,255,0.02) 40%, transparent 80%);"></div>
+    <div class="god-ray"></div>
+  </div>
+  <div class="caustics"></div>
+  <div class="bubbles" id="heroBubbles" data-bubbles="14"></div>
+
+  <!-- Brass compass -->
+  <div class="compass-container">
+    <div class="compass-ring"></div>
+    <div class="compass-ring"></div>
+    <div class="compass-ring"></div>
+  </div>
+
+  <div class="page-hero-content">
+    <div class="page-hero-tag">20,000 Leagues</div>
+    <h1 class="page-hero-title">Legends of<br><span class="highlight" style="color: #d4af5a;">the Deep</span></h1>
+    <p class="page-hero-desc">The pioneers, warriors, and explorers who charted the course beneath the surface. Their courage made everything that followed possible.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ LEGENDS CONTENT ═══════ -->
+<section class="content-section dark" style="padding-top: 80px;">
+  <div class="god-rays" style="opacity: 0.25;">
+    <div class="god-ray" style="left:10%;width:70px;background: linear-gradient(180deg, rgba(184,148,62,0.04), transparent 70%);"></div>
+    <div class="god-ray" style="left:50%;width:100px;"></div>
+    <div class="god-ray" style="left:85%;width:60px;background: linear-gradient(180deg, rgba(184,148,62,0.03), transparent 70%);"></div>
+  </div>
+  <div class="bubbles" id="mainBubbles" data-bubbles="12"></div>
+  <div class="plankton-field" id="mainPlankton" data-plankton="25"></div>
+
+  <div class="content-wrap" style="max-width: 1100px;">
+
+    <!-- ══ INTRO ══ -->
+    <div class="section-tag reveal" style="color: #b8943e;">
+      <span style="display:none;"></span>The Pantheon
+    </div>
+    <p class="reveal reveal-delay-1" style="font-size: 18px; line-height: 1.8; color: var(--fog); max-width: 700px; margin-bottom: 64px;">Every time a diver descends below the surface, they stand on the shoulders of legends who risked everything to explore the unknown. These are the icons who built the world beneath the waves.</p>
+
+
+    <!-- ══════════════════════════════
+         ERA: THE FOUNDING FATHERS
+         ══════════════════════════════ -->
+    <div class="era-divider reveal">
+      <div class="era-divider-line"></div>
+      <div class="era-divider-label">The Founding Fathers</div>
+      <div class="era-divider-line"></div>
+    </div>
+
+
+    <!-- JACQUES COUSTEAU -->
+    <div class="legend-card reveal">
+      <div class="porthole">
+        <div class="porthole-frame">
+          <img src="{{ 'cousteau.png' | asset_url }}" class="porthole-img" alt="Jacques Cousteau" style="object-position: center 15%;">
+        </div>
+        <div class="porthole-bolts">
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+        </div>
+      </div>
+      <div class="legend-info">
+        <div class="legend-era">1910 . 1997</div>
+        <h2 class="legend-name">Jacques Cousteau</h2>
+        <div class="legend-title">Father of Modern Diving</div>
+        <p class="legend-bio">Co-inventor of the Aqua-Lung, the device that gave humanity the ability to breathe underwater. Cousteau spent a lifetime revealing the ocean's wonders through film, research, and tireless exploration aboard the <em>Calypso</em>. His work transformed scuba diving from a military tool into a global passion and awakened the world to marine conservation.</p>
+        <div class="legend-feats">
+          <span class="legend-feat">Aqua-Lung Co-Inventor</span>
+          <span class="legend-feat">The Silent World</span>
+          <span class="legend-feat">Calypso Expeditions</span>
+          <span class="legend-feat">Ocean Conservationist</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- HANS HASS -->
+    <div class="legend-card reveal">
+      <div class="porthole">
+        <div class="porthole-frame">
+          <img src="{{ 'hass.png' | asset_url }}" class="porthole-img" alt="Hans Hass">
+        </div>
+        <div class="porthole-bolts">
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+        </div>
+      </div>
+      <div class="legend-info">
+        <div class="legend-era">1919 . 2013</div>
+        <h2 class="legend-name">Hans Hass</h2>
+        <div class="legend-title">Pioneer of Underwater Film</div>
+        <p class="legend-bio">Austrian biologist and filmmaker who was among the first to document marine life on camera. Before Cousteau became a household name, Hass was already exploring the deep with custom-built camera housings, producing groundbreaking underwater documentaries and publishing over 25 books on ocean life and coral reef ecosystems.</p>
+        <div class="legend-feats">
+          <span class="legend-feat">First Underwater Documentaries</span>
+          <span class="legend-feat">Marine Biologist</span>
+          <span class="legend-feat">25+ Published Works</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- WILLIAM BEEBE -->
+    <div class="legend-card reveal">
+      <div class="porthole">
+        <div class="porthole-frame">
+          <img src="{{ 'beebe.png' | asset_url }}" class="porthole-img" alt="William Beebe" style="object-position: center 10%;">
+        </div>
+        <div class="porthole-bolts">
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+        </div>
+      </div>
+      <div class="legend-info">
+        <div class="legend-era">1877 . 1962</div>
+        <h2 class="legend-name">William Beebe</h2>
+        <div class="legend-title">Explorer of the Abyss</div>
+        <p class="legend-bio">The man who saw the deep first. Using a hollow steel sphere called the Bathysphere, Beebe descended to 3,028 feet off the coast of Bermuda in 1934, setting a depth record that stood for decades. His live radio broadcasts from the deep captivated the world and proved that exploration of the ocean's darkest zones was possible.</p>
+        <div class="legend-feats">
+          <span class="legend-feat">Bathysphere Pioneer</span>
+          <span class="legend-feat">3,028 ft Record</span>
+          <span class="legend-feat">Deep-Sea Naturalist</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ VINTAGE QUOTE ═══ -->
+    <div class="vintage-quote reveal">
+      <blockquote>"The sea, once it casts its spell, holds one in its net of <span class="em">wonder</span> forever."</blockquote>
+      <cite>Jacques Cousteau</cite>
+    </div>
+
+
+    <!-- ══════════════════════════════
+         ERA: MILITARY LEGENDS
+         ══════════════════════════════ -->
+    <div class="era-divider reveal">
+      <div class="era-divider-line"></div>
+      <div class="era-divider-label">Military Legends</div>
+      <div class="era-divider-line"></div>
+    </div>
+
+
+    <!-- CARL BRASHEAR -->
+    <div class="legend-card reveal">
+      <div class="porthole">
+        <div class="porthole-frame">
+          <img src="{{ 'brashear.png' | asset_url }}" class="porthole-img" alt="Carl Brashear" style="object-position: center 15%;">
+        </div>
+        <div class="porthole-bolts">
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+        </div>
+      </div>
+      <div class="legend-info">
+        <div class="legend-era">1931 . 2006</div>
+        <h2 class="legend-name">Carl Brashear</h2>
+        <div class="legend-title">U.S. Navy Master Diver</div>
+        <p class="legend-bio">Born to a sharecropping family in Kentucky, Brashear enlisted in the Navy in 1948 and became the first African American Navy Master Diver in 1970. After losing his left leg in a 1966 nuclear weapon recovery operation off the coast of Spain, he refused medical retirement, secretly returned to diving, and proved he could still perform at the highest level. His story inspired the film <em>Men of Honor</em>.</p>
+        <div class="legend-feats">
+          <span class="legend-feat">First Black Master Diver</span>
+          <span class="legend-feat">Palomares Recovery</span>
+          <span class="legend-feat">Amputee Diver Pioneer</span>
+          <span class="legend-feat">Men of Honor</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- U.S. NAVY DIVERS -->
+    <div class="legend-card reveal">
+      <div class="porthole">
+        <div class="porthole-frame">
+          <img src="{{ 'navydivers.png' | asset_url }}" class="porthole-img" alt="U.S. Navy Divers">
+        </div>
+        <div class="porthole-bolts">
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+        </div>
+      </div>
+      <div class="legend-info">
+        <div class="legend-era">1882 . Present</div>
+        <h2 class="legend-name">U.S. Navy Divers</h2>
+        <div class="legend-title">The Standard Bearers</div>
+        <p class="legend-bio">From the first Navy deep-sea diving school established in 1882 to today's elite Explosive Ordnance Disposal and Special Warfare units, Navy Divers have set the global standard for underwater operations. Salvage, rescue, demolition, combat. Every protocol, every piece of commercial dive equipment, and every safety standard traces its lineage to military diving programs that refined the craft under the most unforgiving conditions imaginable.</p>
+        <div class="legend-feats">
+          <span class="legend-feat">Deep Sea Diving School</span>
+          <span class="legend-feat">Salvage &amp; Recovery</span>
+          <span class="legend-feat">EOD / Special Warfare</span>
+          <span class="legend-feat">SEALAB Programs</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- U.S. COAST GUARD DIVERS -->
+    <div class="legend-card reveal">
+      <div class="porthole">
+        <div class="porthole-frame">
+          <img src="{{ 'coastguard.png' | asset_url }}" class="porthole-img" alt="U.S. Coast Guard Divers" style="object-position: center 30%;">
+        </div>
+        <div class="porthole-bolts">
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+        </div>
+      </div>
+      <div class="legend-info">
+        <div class="legend-era">1939 . Present</div>
+        <h2 class="legend-name">U.S. Coast Guard Divers</h2>
+        <div class="legend-title">Guardians of the Waterway</div>
+        <p class="legend-bio">Since World War II, U.S. Coast Guard Divers have served as the nation's frontline underwater force for search and rescue, maritime law enforcement, port security, and aids-to-navigation maintenance. Operating in some of the world's most hazardous diving conditions — zero visibility, swift currents, and freezing water — Coast Guard Divers are rescue professionals first and foremost. Their work in disaster response, ship salvage, and underwater infrastructure inspection has saved countless lives and protected America's ports, waterways, and coastal communities for over eight decades.</p>
+        <div class="legend-feats">
+          <span class="legend-feat">Search &amp; Rescue</span>
+          <span class="legend-feat">Port Security</span>
+          <span class="legend-feat">Maritime Law Enforcement</span>
+          <span class="legend-feat">Disaster Response</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ROBERT BALLARD -->
+    <div class="legend-card reveal">
+      <div class="porthole">
+        <div class="porthole-frame">
+          <img src="{{ 'ballard.png' | asset_url }}" class="porthole-img" alt="Robert Ballard" style="object-position: center 20%;">
+        </div>
+        <div class="porthole-bolts">
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+        </div>
+      </div>
+      <div class="legend-info">
+        <div class="legend-era">1942 . Present</div>
+        <h2 class="legend-name">Robert Ballard</h2>
+        <div class="legend-title">Deep-Sea Explorer &amp; USNR Commander</div>
+        <p class="legend-bio">Oceanographer, U.S. Naval Reserve commander, and the man who found the Titanic. Ballard's 1985 discovery of the legendary wreck at 12,500 feet transformed deep-sea exploration and pioneered the use of remotely operated vehicles for underwater archaeology. His career spans over 150 deep-sea expeditions and the discovery of hydrothermal vents that rewrote the biology textbooks.</p>
+        <div class="legend-feats">
+          <span class="legend-feat">Found the Titanic</span>
+          <span class="legend-feat">150+ Expeditions</span>
+          <span class="legend-feat">ROV Telepresence Pioneer</span>
+          <span class="legend-feat">Hydrothermal Vent Discovery</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════
+         ERA: TRAILBLAZERS
+         ══════════════════════════════ -->
+    <div class="era-divider reveal">
+      <div class="era-divider-line"></div>
+      <div class="era-divider-label">Trailblazers</div>
+      <div class="era-divider-line"></div>
+    </div>
+
+
+    <!-- SYLVIA EARLE -->
+    <div class="legend-card reveal">
+      <div class="porthole">
+        <div class="porthole-frame">
+          <img src="{{ 'earle.png' | asset_url }}" class="porthole-img" alt="Sylvia Earle" style="object-position: center 30%;">
+        </div>
+        <div class="porthole-bolts">
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+        </div>
+      </div>
+      <div class="legend-info">
+        <div class="legend-era">1935 . Present</div>
+        <h2 class="legend-name">Sylvia Earle</h2>
+        <div class="legend-title">Her Deepness</div>
+        <p class="legend-bio">Marine biologist, oceanographer, and former NOAA Chief Scientist, Earle has led more than 100 expeditions and logged over 7,000 hours underwater. In 1979 she walked the ocean floor at 1,250 feet in a JIM suit, deeper than any human before her without a tether. National Geographic's Explorer-in-Residence and founder of Mission Blue, she has spent decades fighting to protect the ocean she loves.</p>
+        <div class="legend-feats">
+          <span class="legend-feat">1,250 ft Solo Walk</span>
+          <span class="legend-feat">7,000+ Hours Submerged</span>
+          <span class="legend-feat">NOAA Chief Scientist</span>
+          <span class="legend-feat">Mission Blue Founder</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ZALE PARRY -->
+    <div class="legend-card reveal">
+      <div class="porthole">
+        <div class="porthole-frame">
+          <img src="{{ 'parry.png' | asset_url }}" class="porthole-img" alt="Zale Parry" style="object-position: center 10%;">
+        </div>
+        <div class="porthole-bolts">
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+        </div>
+      </div>
+      <div class="legend-info">
+        <div class="legend-era">1933 . 2019</div>
+        <h2 class="legend-name">Zale Parry</h2>
+        <div class="legend-title">Diving's First Lady</div>
+        <p class="legend-bio">One of the first female dive instructors in the United States. Parry set the women's deep-diving record at 209 feet in 1954, co-starred in the iconic television series <em>Sea Hunt</em>, helped develop decompression chamber treatment for diving injuries, and co-founded the International Underwater Film Festival. A member of the inaugural Women Divers Hall of Fame class, she blazed every trail there was.</p>
+        <div class="legend-feats">
+          <span class="legend-feat">209 ft Women's Record</span>
+          <span class="legend-feat">Sea Hunt Star</span>
+          <span class="legend-feat">Equipment Test Diver</span>
+          <span class="legend-feat">Hall of Fame Inductee</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- MEL FISHER -->
+    <div class="legend-card reveal">
+      <div class="porthole">
+        <div class="porthole-frame">
+          <img src="{{ 'fisher.png' | asset_url }}" class="porthole-img" alt="Mel Fisher" style="object-position: center 25%;">
+        </div>
+        <div class="porthole-bolts">
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+        </div>
+      </div>
+      <div class="legend-info">
+        <div class="legend-era">1922 . 1998</div>
+        <h2 class="legend-name">Mel Fisher</h2>
+        <div class="legend-title">The World's Greatest Treasure Hunter</div>
+        <p class="legend-bio">After 16 years of relentless searching, Fisher discovered the Spanish galleon <em>Nuestra Se&ntilde;ora de Atocha</em> in 1985, recovering over $450 million in gold, silver, and emeralds from the Florida Straits. He opened one of the first dive shops in the United States and spent his entire life at the intersection of diving and adventure. His motto: "Today's the day."</p>
+        <div class="legend-feats">
+          <span class="legend-feat">Atocha Discovery</span>
+          <span class="legend-feat">$450M+ Recovery</span>
+          <span class="legend-feat">16-Year Search</span>
+          <span class="legend-feat">Dive Shop Pioneer</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- JILL HEINERTH -->
+    <div class="legend-card reveal">
+      <div class="porthole">
+        <div class="porthole-frame">
+          <img src="{{ 'heinerth.png' | asset_url }}" class="porthole-img" alt="Jill Heinerth" style="object-position: center 25%;">
+        </div>
+        <div class="porthole-bolts">
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+          <div class="porthole-bolt"></div><div class="porthole-bolt"></div>
+        </div>
+      </div>
+      <div class="legend-info">
+        <div class="legend-era">1964 . Present</div>
+        <h2 class="legend-name">Jill Heinerth</h2>
+        <div class="legend-title">Queen of Cave Diving</div>
+        <p class="legend-bio">Canadian cave diver, underwater explorer, and the first person to dive deep inside an Antarctic iceberg. Heinerth has penetrated further into underwater caves than any woman in history, mapping uncharted passages that have never seen light. A filmmaker, author, and Explorer-in-Residence for the Royal Canadian Geographical Society, she uses her expeditions to raise awareness about climate change and freshwater conservation.</p>
+        <div class="legend-feats">
+          <span class="legend-feat">Antarctic Iceberg Dive</span>
+          <span class="legend-feat">Cave Diving Pioneer</span>
+          <span class="legend-feat">Climate Advocate</span>
+          <span class="legend-feat">Explorer-in-Residence</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ CLOSING QUOTE ═══ -->
+    <div class="vintage-quote reveal" style="margin-top: 48px;">
+      <blockquote>"It is not the strongest of the species that survives, nor the most intelligent. It is the one most <span class="em">adaptable</span> to change."</blockquote>
+      <cite>Charles Darwin</cite>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-band">
+  <div class="god-rays" style="opacity:0.3;">
+    <div class="god-ray" style="left:35%;width:140px;"></div>
+    <div class="god-ray" style="left:65%;width:90px;"></div>
+  </div>
+  <div class="bubbles" id="ctaBubbles" data-bubbles="8"></div>
+  <h2>Join the Legacy</h2>
+  <p>Every great dive starts with the decision to go. Train with HERO and write your own chapter.</p>
+  <a href="/pages/quote" class="btn-primary">Start Your Mission</a>
+</section>

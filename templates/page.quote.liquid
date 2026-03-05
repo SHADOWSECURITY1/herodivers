@@ -1,0 +1,85 @@
+<section class="page-hero">
+  <div class="page-hero-ocean"></div>
+  <div class="god-rays"><div class="god-ray"></div><div class="god-ray"></div><div class="god-ray"></div><div class="god-ray"></div></div>
+  <div class="caustics"></div>
+  <div class="bubbles" id="heroBubbles" data-bubbles="14"></div>
+  <div class="plankton-field" id="heroPlankton" data-plankton="20"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-tag">Company</div>
+    <h1 class="page-hero-title">Request a<br><span class="highlight">Quote</span></h1>
+    <p class="page-hero-desc">Tell us about your project and we will put together a scope and estimate. Fast response. No obligation.</p>
+  </div>
+</section>
+
+<section class="content-section dark">
+  <div class="god-rays" style="opacity:0.3;"><div class="god-ray" style="left:10%;width:80px;"></div><div class="god-ray" style="left:70%;width:100px;"></div></div>
+  <div class="bubbles" id="b1" data-bubbles="8"></div>
+  <div class="content-wrap">
+    <div class="section-tag reveal">Get Started</div>
+    <h2 class="reveal reveal-delay-1">Tell Us About Your Mission</h2>
+    <p class="reveal reveal-delay-2">Fill out the form below and we will be in touch within 24 hours. The more detail you provide, the faster we can get you an accurate quote.</p>
+
+    {% form 'contact' %}
+      {% if form.posted_successfully? %}
+        <div class="quote-success reveal">
+          <div class="success-icon">✓</div>
+          <h3>Request Received</h3>
+          <p>Thank you for reaching out. A member of the HERO team will be in touch within 24 hours.</p>
+        </div>
+      {% else %}
+        {% if form.errors %}
+          <div class="form-errors">
+            {{ form.errors | default_errors }}
+          </div>
+        {% endif %}
+        <form class="contact-form reveal reveal-delay-3" id="quoteForm">
+          <div class="form-row">
+            <div class="form-group"><label>First Name</label><input type="text" id="qFirstName" placeholder="Your first name" required></div>
+            <div class="form-group"><label>Last Name</label><input type="text" id="qLastName" placeholder="Your last name" required></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Email</label><input name="contact[email]" type="email" placeholder="you@email.com" required></div>
+            <div class="form-group"><label>Phone</label><input type="tel" id="qPhone" placeholder="(555) 123-4567"></div>
+          </div>
+          <div class="form-group">
+            <label>Service Needed</label>
+            <select id="qService" required>
+              <option value="" disabled selected>Select a service</option>
+              <option>Hull &amp; Running Gear Inspection</option>
+              <option>Dock &amp; Structure Inspection</option>
+              <option>Condition Report</option>
+              <option>Custom Marine Ops</option>
+              <option>Private Scuba Training</option>
+              <option>Group Scuba Training</option>
+              <option>Certification Program</option>
+              <option>Travel-Based Training</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Location</label><input type="text" id="qLocation" placeholder="Vessel or site location"></div>
+          <div class="form-group"><label>Project Details</label><textarea id="qDetails" placeholder="Tell us about your project, vessel, or training goals..."></textarea></div>
+          <input type="hidden" name="contact[name]" id="qFullName">
+          <textarea name="contact[body]" id="qBody" style="display:none;"></textarea>
+          <button type="submit" class="btn-primary" style="border:none; cursor:pointer; width: fit-content;">Submit Request</button>
+        </form>
+        <script>
+          document.getElementById('quoteForm').addEventListener('submit', function(e) {
+            var first = document.getElementById('qFirstName').value;
+            var last  = document.getElementById('qLastName').value;
+            var phone = document.getElementById('qPhone').value;
+            var svc   = document.getElementById('qService').value;
+            var loc   = document.getElementById('qLocation').value;
+            var det   = document.getElementById('qDetails').value;
+            document.getElementById('qFullName').value = first + ' ' + last;
+            document.getElementById('qBody').value =
+              'Name: ' + first + ' ' + last + '\n' +
+              'Phone: ' + phone + '\n' +
+              'Service Needed: ' + svc + '\n' +
+              'Location: ' + loc + '\n\n' +
+              'Project Details:\n' + det;
+          });
+        </script>
+      {% endif %}
+    {% endform %}
+  </div>
+</section>
