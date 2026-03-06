@@ -1,0 +1,107 @@
+<section class="page-hero" style="min-height:32vh;">
+  <div class="page-hero-ocean"></div>
+  <div class="god-rays"><div class="god-ray"></div><div class="god-ray"></div><div class="god-ray"></div></div>
+  <div class="bubbles" id="heroBubbles" data-bubbles="8"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-tag">Gear</div>
+    <h1 class="page-hero-title" style="font-size:clamp(28px,5vw,52px);">Your <span style="color:var(--cyan);">Cart</span></h1>
+  </div>
+</section>
+
+<section class="content-section dark">
+  <div class="god-rays" style="opacity:0.2;"></div>
+  <div class="bubbles" id="b1" data-bubbles="6"></div>
+  <div class="content-wrap" style="max-width:860px;">
+
+    {% if cart.item_count == 0 %}
+      <div style="text-align:center; padding:80px 0;">
+        <div style="font-size:48px; margin-bottom:20px;">🤿</div>
+        <h2 style="font-family:'Oswald',sans-serif; font-size:28px; letter-spacing:3px; text-transform:uppercase; margin-bottom:12px;">Your cart is empty</h2>
+        <p style="color:var(--fog); margin-bottom:32px;">Dive back in and grab some HERO gear.</p>
+        <a href="/pages/gear" class="btn-primary">Browse Gear →</a>
+      </div>
+
+    {% else %}
+      {% form 'cart', cart %}
+
+        <!-- Line items -->
+        <div style="border:1px solid var(--border); margin-bottom:32px;">
+          <!-- Header -->
+          <div style="display:grid; grid-template-columns:1fr auto auto; gap:16px; padding:14px 20px; border-bottom:1px solid var(--border); background:rgba(0,212,255,0.03);">
+            <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--fog);">Product</div>
+            <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--fog); width:100px; text-align:center;">Qty</div>
+            <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--fog); width:80px; text-align:right;">Total</div>
+          </div>
+
+          {% for item in cart.items %}
+            <div style="display:grid; grid-template-columns:1fr auto auto; gap:16px; padding:20px; border-bottom:1px solid rgba(255,255,255,0.04); align-items:center;">
+
+              <!-- Product info -->
+              <div style="display:flex; gap:16px; align-items:center;">
+                <div style="position:relative; width:72px; height:72px; flex-shrink:0; border-radius:8px; overflow:hidden; border:2px solid #1a2e4a; box-shadow:0 0 0 1px #0d1f36, 0 0 0 2px #243d5c;">
+                  <img src="{{ item.image | img_url: '150x150', crop: 'center' }}"
+                       alt="{{ item.title | escape }}"
+                       style="width:100%; height:100%; object-fit:cover;">
+                  <!-- mini vignette -->
+                  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 50% 50%,transparent 40%,rgba(2,8,16,0.5) 100%);pointer-events:none;"></div>
+                </div>
+                <div>
+                  <div style="font-family:'Oswald',sans-serif; font-size:15px; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px;">
+                    <a href="{{ item.url }}" style="color:var(--white); text-decoration:none;">{{ item.product.title }}</a>
+                  </div>
+                  {% if item.variant.title != 'Default Title' %}
+                    <div style="font-size:12px; color:var(--fog);">{{ item.variant.title }}</div>
+                  {% endif %}
+                  <div style="font-size:12px; color:var(--fog); margin-top:2px;">{{ item.price | money }} each</div>
+                  <a href="{{ item.url_to_remove }}" style="font-size:11px; letter-spacing:1px; color:rgba(232,39,44,0.7); text-decoration:none; text-transform:uppercase; font-family:'Barlow Condensed',sans-serif; margin-top:6px; display:inline-block;">Remove</a>
+                </div>
+              </div>
+
+              <!-- Qty -->
+              <div style="width:100px; display:flex; align-items:center; justify-content:center; gap:0;">
+                <input type="number"
+                       name="updates[]"
+                       value="{{ item.quantity }}"
+                       min="0"
+                       style="width:64px; text-align:center; background:var(--ocean); border:1px solid var(--border); color:var(--white); padding:8px; font-family:'Barlow',sans-serif; font-size:14px;">
+              </div>
+
+              <!-- Line total -->
+              <div style="width:80px; text-align:right; font-family:'Oswald',sans-serif; font-size:16px; color:var(--cyan);">{{ item.line_price | money }}</div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Summary + actions -->
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:32px;">
+
+          <div>
+            <button type="submit" name="update" style="background:transparent; border:1px solid var(--border); color:var(--fog); font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:3px; text-transform:uppercase; padding:12px 24px; cursor:pointer;">Update Cart</button>
+          </div>
+
+          <div style="text-align:right;">
+            <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--fog); margin-bottom:6px;">Order Total</div>
+            <div style="font-family:'Oswald',sans-serif; font-size:36px; font-weight:700; color:var(--cyan); margin-bottom:20px;">{{ cart.total_price | money }}</div>
+            <p style="font-size:12px; color:var(--fog); margin-bottom:20px;">Shipping &amp; taxes calculated at checkout.</p>
+            <button type="submit" name="checkout" class="btn-primary" style="font-size:14px; padding:16px 48px; letter-spacing:3px; cursor:pointer; border:none; width:100%;">
+              Proceed to Checkout →
+            </button>
+            <a href="/pages/gear" style="display:block; margin-top:12px; font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--fog); text-decoration:none; text-align:center;">← Continue Shopping</a>
+          </div>
+
+        </div>
+
+        <!-- Mission note -->
+        <div style="margin-top:40px; padding:16px; border:1px solid var(--border); background:rgba(0,212,255,0.02); display:flex; gap:12px; align-items:flex-start;">
+          <span style="font-size:20px;">🎖️</span>
+          <div>
+            <div style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:4px;">Veteran Owned &amp; Operated</div>
+            <div style="font-size:13px; color:var(--fog); line-height:1.6;">Every purchase supports the HERO mission — Help Everyone Remain Operational. Fulfilled by Printful, shipped directly to you.</div>
+          </div>
+        </div>
+
+      {% endform %}
+    {% endif %}
+
+  </div>
+</section>

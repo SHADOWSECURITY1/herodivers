@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — Hero Divers Portal</title>
+<title>Admin — HERO Divers Portal</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,9 +15,9 @@
 
 <nav id="mainNav">
   <a href="https://herodivingandmarine.com" class="nav-brand">
-    <img src="logo.png" class="bottlecap-logo" style="height:48px;" alt="Hero Diving">
+    <img src="logo.png" class="bottlecap-logo" style="height:48px;" alt="HERO Diving">
     <span class="nav-brand-text">
-      <span class="nav-brand-name">Hero</span>
+      <span class="nav-brand-name">HERO</span>
       <span class="nav-brand-sub">Admin</span>
     </span>
   </a>
@@ -58,7 +58,7 @@
   <main class="portal-main">
     <div class="page-header">
       <div class="page-tag">Admin</div>
-      <h1 class="page-title">Hero Divers <span style="color:var(--cyan);">Dashboard</span></h1>
+      <h1 class="page-title">HERO Divers <span style="color:var(--cyan);">Dashboard</span></h1>
     </div>
 
     <!-- Stats -->
@@ -133,8 +133,8 @@
         <div class="stat-value" id="statRevenueTotal"></div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Hero Take (20%)</div>
-        <div class="stat-value cyan" id="statHeroTake"></div>
+        <div class="stat-label">HERO Take (20%)</div>
+        <div class="stat-value cyan" id="statHEROTake"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Diver Payouts (80%)</div>
@@ -276,7 +276,7 @@
     document.getElementById('statDivers').textContent = stats.approvedDivers ?? '—';
     document.getElementById('statRevenueMTD').textContent = stats.revenueMTD ? '$' + Math.round(stats.revenueMTD / 100) : '$0';
     document.getElementById('statRevenueTotal').textContent = stats.revenueTotal ? '$' + Math.round(stats.revenueTotal / 100) : '$0';
-    document.getElementById('statHeroTake').textContent = stats.revenueTotal ? '$' + Math.round(stats.revenueTotal * 0.20 / 100) : '$0';
+    document.getElementById('statHEROTake').textContent = stats.revenueTotal ? '$' + Math.round(stats.revenueTotal * 0.20 / 100) : '$0';
     document.getElementById('statDiverPayout').textContent = stats.revenueTotal ? '$' + Math.round(stats.revenueTotal * 0.80 / 100) : '$0';
 
     // Show pending badge

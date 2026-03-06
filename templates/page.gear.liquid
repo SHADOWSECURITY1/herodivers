@@ -11,17 +11,258 @@
   </div>
 </section>
 
+<style>
+  .porthole-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 48px 40px;
+    padding: 16px 0 40px;
+  }
+  .porthole-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .porthole-window {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    border-radius: 18px;
+    background: #0a1628;
+    border: 6px solid #1a2e4a;
+    box-shadow:
+      0 0 0 2px #0d1f36,
+      0 0 0 4px #243d5c,
+      0 0 0 6px #0d1f36,
+      inset 0 2px 8px rgba(0,0,0,0.8),
+      0 8px 32px rgba(0,0,0,0.6);
+    overflow: hidden;
+  }
+  .porthole-window::before,
+  .porthole-window::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle at 35% 35%, #3a5a7a, #1a2e4a);
+    border-radius: 50%;
+    border: 1px solid #243d5c;
+    z-index: 3;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  }
+  .porthole-window::before { top: 10px; left: 10px; }
+  .porthole-window::after  { top: 10px; right: 10px; }
+  .bolt-bl, .bolt-br {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle at 35% 35%, #3a5a7a, #1a2e4a);
+    border-radius: 50%;
+    border: 1px solid #243d5c;
+    z-index: 3;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    bottom: 10px;
+  }
+  .bolt-bl { left: 10px; }
+  .bolt-br { right: 10px; }
+  .porthole-window .porthole-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+    filter: brightness(0.92) saturate(0.95);
+  }
+  .porthole-card:hover .porthole-img {
+    transform: scale(1.04);
+    filter: brightness(1) saturate(1);
+  }
+  .porthole-glass {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,212,255,0.06) 0%, transparent 40%, transparent 70%, rgba(0,100,180,0.08) 100%);
+    border-radius: 12px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .porthole-depth {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 10px 14px;
+    background: linear-gradient(0deg, rgba(2,8,16,0.88) 0%, transparent 100%);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+  }
+  .porthole-depth-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(0,212,255,0.7);
+  }
+  .porthole-info { width: 100%; text-align: center; }
+  .porthole-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 6px;
+    text-decoration: none;
+    display: block;
+  }
+  .porthole-title:hover { color: var(--cyan); }
+  .porthole-price {
+    font-family: 'Oswald', sans-serif;
+    font-size: 20px;
+    color: var(--cyan);
+    margin-bottom: 14px;
+  }
+
+  /* Collection section divider */
+  .collection-section { margin-bottom: 72px; }
+  .collection-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 36px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .collection-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--white);
+    margin: 0;
+  }
+  .collection-count {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--fog);
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .collection-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+</style>
+
 <section class="content-section dark">
   <div class="god-rays" style="opacity:0.3;"><div class="god-ray" style="left:45%;width:130px;"></div><div class="god-ray" style="left:80%;width:70px;"></div></div>
   <div class="bubbles" id="b1" data-bubbles="10"></div>
-  <div class="content-wrap" style="text-align:center;">
-    <div style="display:flex;justify-content:center;margin-bottom:48px;" class="reveal">
-      <img src="{{ 'logo.png' | asset_url }}" class="bottlecap-logo" width="240" height="240" alt="HERO Diving and Marine Services">
-    </div>
-    <div class="section-tag reveal reveal-delay-1" style="justify-content:center;"><span></span>The Gear</div>
-    <h2 class="reveal reveal-delay-2">Built for the Operational</h2>
-    <p class="reveal reveal-delay-3" style="margin:0 auto 24px;">Veteran-designed merch and tactical-grade apparel. Every purchase supports a veteran-owned business and the HERO mission to Help Everyone Remain Operational.</p>
-    <p class="reveal reveal-delay-4" style="margin:0 auto 40px;">Full HERO gear shop coming soon. Apparel, accessories, and mission-ready equipment.</p>
-    <a href="/pages/contact" class="btn-primary reveal reveal-delay-4">Get Notified at Launch</a>
+  <div class="content-wrap">
+
+    <div class="section-tag reveal" style="justify-content:center; margin-bottom:12px;"><span></span>The Gear</div>
+    <h2 class="reveal reveal-delay-1" style="text-align:center; margin-bottom:8px;">Built for the Operational</h2>
+    <p class="reveal reveal-delay-2" style="text-align:center; margin:0 auto 56px; max-width:560px;">Veteran-designed merch and tactical-grade apparel. Every purchase supports a veteran-owned business and the HERO mission.</p>
+
+    {% assign gear_collections = 'apparel,drinkware,accessories' | split: ',' %}
+    {% assign collection_icons = '👕,🥃,🎖️' | split: ',' %}
+    {% assign collection_labels = 'Apparel,Drinkware,Accessories' | split: ',' %}
+
+    {% for col_handle in gear_collections %}
+      {% assign col = collections[col_handle] %}
+      {% if col and col.products_count > 0 %}
+        {% assign col_index = forloop.index0 %}
+        <div class="collection-section reveal">
+          <div class="collection-header">
+            <span class="collection-icon">{{ collection_icons[col_index] }}</span>
+            <h3 class="collection-title">{{ collection_labels[col_index] }}</h3>
+            <span class="collection-count">{{ col.products_count }} item{% if col.products_count != 1 %}s{% endif %}</span>
+          </div>
+
+          <div class="porthole-grid">
+            {% for product in col.products %}
+              <div class="porthole-card">
+                <a href="{{ product.url }}" style="width:100%; display:block; text-decoration:none;">
+                  <div class="porthole-window">
+                    {% if product.featured_image %}
+                      <img class="porthole-img"
+                           src="{{ product.featured_image | img_url: '600x450', crop: 'center' }}"
+                           alt="{{ product.featured_image.alt | escape }}"
+                           loading="lazy">
+                    {% else %}
+                      <div style="width:100%; height:100%; background:var(--deep); display:flex; align-items:center; justify-content:center; color:var(--fog); font-size:13px;">No image</div>
+                    {% endif %}
+                    <div class="porthole-glass"></div>
+                    <div class="bolt-bl"></div>
+                    <div class="bolt-br"></div>
+                    <div class="porthole-depth">
+                      <span class="porthole-depth-label">{{ product.type | default: collection_labels[col_index] }}</span>
+                      {% unless product.available %}<span style="font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:2px; color:rgba(232,39,44,0.8);">OUT OF STOCK</span>{% endunless %}
+                    </div>
+                  </div>
+                </a>
+                <div class="porthole-info">
+                  <a href="{{ product.url }}" class="porthole-title">{{ product.title }}</a>
+                  <div class="porthole-price">{{ product.price | money }}</div>
+                  {% if product.available %}
+                    <a href="{{ product.url }}" class="btn-primary" style="font-size:12px; padding:10px 28px; text-decoration:none; letter-spacing:2px;">Shop →</a>
+                  {% else %}
+                    <span style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:2px; color:var(--fog); text-transform:uppercase;">Out of Stock</span>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <!-- Fallback: show all products if no collections are set up yet -->
+    {% assign has_collections = false %}
+    {% for col_handle in gear_collections %}
+      {% if collections[col_handle].products_count > 0 %}
+        {% assign has_collections = true %}
+      {% endif %}
+    {% endfor %}
+
+    {% unless has_collections %}
+      <div class="porthole-grid">
+        {% for product in collections.all.products %}
+          <div class="porthole-card reveal">
+            <a href="{{ product.url }}" style="width:100%; display:block; text-decoration:none;">
+              <div class="porthole-window">
+                {% if product.featured_image %}
+                  <img class="porthole-img"
+                       src="{{ product.featured_image | img_url: '600x450', crop: 'center' }}"
+                       alt="{{ product.featured_image.alt | escape }}"
+                       loading="lazy">
+                {% else %}
+                  <div style="width:100%; height:100%; background:var(--deep); display:flex; align-items:center; justify-content:center; color:var(--fog);">No image</div>
+                {% endif %}
+                <div class="porthole-glass"></div>
+                <div class="bolt-bl"></div>
+                <div class="bolt-br"></div>
+                <div class="porthole-depth">
+                  <span class="porthole-depth-label">{{ product.type | default: 'HERO Gear' }}</span>
+                </div>
+              </div>
+            </a>
+            <div class="porthole-info">
+              <a href="{{ product.url }}" class="porthole-title">{{ product.title }}</a>
+              <div class="porthole-price">{{ product.price | money }}</div>
+              {% if product.available %}
+                <a href="{{ product.url }}" class="btn-primary" style="font-size:12px; padding:10px 28px; text-decoration:none; letter-spacing:2px;">Shop →</a>
+              {% else %}
+                <span style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:2px; color:var(--fog); text-transform:uppercase;">Out of Stock</span>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endunless %}
+
   </div>
 </section>

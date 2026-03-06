@@ -15,7 +15,7 @@ async function sendEmail(to, subject, html) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      from: 'Hero Diving & Marine <jobs@herodivingandmarine.com>',
+      from: 'HERO Diving & Marine <jobs@herodivingandmarine.com>',
       to: Array.isArray(to) ? to : [to],
       subject,
       html
@@ -60,12 +60,12 @@ function jobOpenEmailHtml({ jobType, vesselName, jobLocation, scheduledDate, pri
         </tr>
       </table>
       <div style="background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);padding:16px;margin-bottom:24px;font-size:13px;color:#8a9bb5;line-height:1.6;">
-        First to accept gets the job. Log in to the Hero Diver Portal to view details and accept.
+        First to accept gets the job. Log in to the HERO Diver Portal to view details and accept.
       </div>
       <a href="${jobBoardUrl}" style="display:inline-block;background:#e8272c;color:#fff;padding:14px 40px;font-family:Georgia,serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;font-weight:bold;">View Job Board →</a>
     </div>
     <div style="padding:24px 32px;text-align:center;border-top:1px solid rgba(0,212,255,0.1);">
-      <div style="font-size:11px;color:#8a9bb5;">Hero Diving &amp; Marine Services · <a href="https://herodivingandmarine.com" style="color:#00d4ff;text-decoration:none;">herodivingandmarine.com</a></div>
+      <div style="font-size:11px;color:#8a9bb5;">HERO Diving &amp; Marine Services · <a href="https://herodivingandmarine.com" style="color:#00d4ff;text-decoration:none;">herodivingandmarine.com</a></div>
     </div>
   </div>
 </body>
@@ -86,13 +86,13 @@ function jobAcceptedEmailHtml({ diverName, vesselName, jobType }) {
       <div style="background:rgba(26,107,74,0.2);border:1px solid rgba(74,222,128,0.3);padding:6px 20px;display:inline-block;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#4ade80;font-weight:bold;margin-bottom:24px;">Job Accepted</div>
       <h2 style="font-family:Georgia,serif;font-size:22px;color:#f0f4f8;margin:0 0 16px;">${jobType || 'Inspection'} — ${vesselName || 'Your Vessel'}</h2>
       <p style="color:#8a9bb5;font-size:15px;line-height:1.7;margin:0 0 24px;">
-        Great news — <strong style="color:#f0f4f8;">${diverName || 'A Hero-certified diver'}</strong> has accepted your inspection job.
+        Great news — <strong style="color:#f0f4f8;">${diverName || 'A HERO-certified diver'}</strong> has accepted your inspection job.
         They will be in contact shortly to confirm details. Your full inspection report will be emailed to you once the dive is complete.
       </p>
       <a href="${PORTAL_BASE_URL}/vessel-dashboard.html" style="display:inline-block;background:#e8272c;color:#fff;padding:14px 40px;font-family:Georgia,serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;font-weight:bold;">View Your Dashboard →</a>
     </div>
     <div style="padding:24px 32px;text-align:center;border-top:1px solid rgba(0,212,255,0.1);">
-      <div style="font-size:11px;color:#8a9bb5;">Hero Diving &amp; Marine Services · <a href="https://herodivingandmarine.com" style="color:#00d4ff;text-decoration:none;">herodivingandmarine.com</a></div>
+      <div style="font-size:11px;color:#8a9bb5;">HERO Diving &amp; Marine Services · <a href="https://herodivingandmarine.com" style="color:#00d4ff;text-decoration:none;">herodivingandmarine.com</a></div>
     </div>
   </div>
 </body>
@@ -207,7 +207,7 @@ exports.handler = async (event) => {
     }
 
     if (type === 'job_complete_payout') {
-      // Notify Hero admin for manual payout processing
+      // Notify HERO admin for manual payout processing
       const { diverName, diverEmail, jobType, vesselName, jobId, priceFormatted } = body;
       const adminEmail = 'mike@shdw.com';
 

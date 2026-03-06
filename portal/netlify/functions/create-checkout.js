@@ -47,7 +47,7 @@ exports.handler = async (event) => {
     'line_items[0][price_data][currency]': 'usd',
     'line_items[0][price_data][unit_amount]': priceInCents.toString(),
     'line_items[0][price_data][product_data][name]': lineItemName,
-    'line_items[0][price_data][product_data][description]': 'Hero Diving & Marine Services — certified underwater inspection',
+    'line_items[0][price_data][product_data][description]': 'HERO Diving & Marine Services — certified underwater inspection',
     'line_items[0][quantity]': '1',
     'mode': 'payment',
     'success_url': `${PORTAL_BASE_URL}/vessel-dashboard.html?payment=success`,

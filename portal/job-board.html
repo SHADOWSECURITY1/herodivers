@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Job Board — Hero Diver Portal</title>
+<title>Job Board — HERO Diver Portal</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,9 +15,9 @@
 
 <nav id="mainNav">
   <a href="https://herodivingandmarine.com" class="nav-brand">
-    <img src="logo.png" class="bottlecap-logo" style="height:48px;" alt="Hero Diving">
+    <img src="logo.png" class="bottlecap-logo" style="height:48px;" alt="HERO Diving">
     <span class="nav-brand-text">
-      <span class="nav-brand-name">Hero</span>
+      <span class="nav-brand-name">HERO</span>
       <span class="nav-brand-sub">Diver Portal</span>
     </span>
   </a>
@@ -72,7 +72,7 @@
       <div class="approval-banner-icon">⏳</div>
       <div>
         <div class="approval-banner-title">Pending Approval</div>
-        <div class="approval-banner-text">Your diver application is under review by the Hero team. You'll receive a welcome email once approved and can begin accepting jobs.</div>
+        <div class="approval-banner-text">Your diver application is under review by the HERO team. You'll receive a welcome email once approved and can begin accepting jobs.</div>
       </div>
     </div>
 
@@ -220,7 +220,7 @@
         body: JSON.stringify({
           type: 'job_accepted_lookup',
           jobId,
-          diverName: profile?.full_name || 'A Hero-certified diver',
+          diverName: profile?.full_name || 'A HERO-certified diver',
           diverId: userId
         })
       }).catch(() => {}); // Non-blocking — job acceptance already succeeded

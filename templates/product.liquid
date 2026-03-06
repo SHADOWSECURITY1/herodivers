@@ -1,0 +1,229 @@
+<style>
+  /* Scuba mask vignette container */
+  .mask-frame {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #020810;
+    width: 100%;
+    max-width: 100%;
+    /* Porthole hull frame */
+    border: 6px solid #1a2e4a;
+    box-shadow:
+      0 0 0 2px #0d1f36,
+      0 0 0 4px #243d5c,
+      0 0 0 6px #0d1f36,
+      inset 0 2px 8px rgba(0,0,0,0.8),
+      0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  /* Corner bolts */
+  .mask-frame::before,
+  .mask-frame::after {
+    content: '';
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    background: radial-gradient(circle at 35% 35%, #3a5a7a, #1a2e4a);
+    border-radius: 50%;
+    border: 1px solid #2d4a68;
+    z-index: 5;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.7);
+  }
+  .mask-frame::before { top: 10px; left: 10px; }
+  .mask-frame::after  { top: 10px; right: 10px; }
+  .bolt-bl, .bolt-br {
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    background: radial-gradient(circle at 35% 35%, #3a5a7a, #1a2e4a);
+    border-radius: 50%;
+    border: 1px solid #2d4a68;
+    z-index: 5;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.7);
+    bottom: 10px;
+  }
+  .bolt-bl { left: 10px; }
+  .bolt-br { right: 10px; }
+
+  .mask-frame img {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .mask-frame:hover img { transform: scale(1.03); }
+
+  /* The scuba mask vignette — dark oval edges, clear center */
+  .mask-vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse 70% 65% at 50% 50%,
+      transparent 40%,
+      rgba(2, 8, 16, 0.45) 65%,
+      rgba(2, 8, 16, 0.82) 82%,
+      rgba(2, 8, 16, 0.96) 100%
+    );
+    border-radius: 12px;
+  }
+
+  /* Subtle cyan water shimmer on the "lens" */
+  .mask-shimmer {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 212, 255, 0.05) 0%,
+      transparent 45%,
+      transparent 70%,
+      rgba(0, 80, 160, 0.07) 100%
+    );
+    border-radius: 12px;
+  }
+
+  /* Thumbnails */
+  .thumb-strip {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(10, 22, 40, 0.9);
+    border-top: 1px solid rgba(0,212,255,0.12);
+    overflow-x: auto;
+  }
+  .thumb-strip img {
+    width: 68px;
+    height: 68px;
+    object-fit: cover;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    flex-shrink: 0;
+    opacity: 0.55;
+    transition: opacity 0.2s, border-color 0.2s;
+  }
+  .thumb-strip img.active,
+  .thumb-strip img:hover {
+    opacity: 1;
+    border-color: rgba(0,212,255,0.5);
+  }
+</style>
+
+<section class="page-hero" style="min-height:38vh;">
+  <div class="page-hero-ocean"></div>
+  <div class="god-rays"><div class="god-ray"></div><div class="god-ray"></div><div class="god-ray"></div></div>
+  <div class="bubbles" id="heroBubbles" data-bubbles="10"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-tag">{{ product.type | default: 'HERO Gear' }}</div>
+    <h1 class="page-hero-title" style="font-size:clamp(28px,5vw,52px);">{{ product.title }}</h1>
+  </div>
+</section>
+
+<section class="content-section dark">
+  <div class="god-rays" style="opacity:0.2;"><div class="god-ray" style="left:70%;width:100px;"></div></div>
+  <div class="bubbles" id="b1" data-bubbles="8"></div>
+  <div class="content-wrap">
+
+    <a href="/pages/gear" style="font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:2px; text-transform:uppercase; color:var(--fog); text-decoration:none; display:inline-flex; align-items:center; gap:8px; margin-bottom:40px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Gear
+    </a>
+
+    <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:64px; align-items:start;">
+
+      <!-- Left: image with dive mask effect -->
+      <div class="reveal" style="min-width:0; max-width:100%;">
+        <div class="mask-frame" id="mainImgFrame">
+          {% if product.featured_image %}
+            <img id="mainProductImg"
+                 src="{{ product.featured_image | img_url: '800x800', crop: 'center' }}"
+                 alt="{{ product.featured_image.alt | escape }}">
+          {% else %}
+            <div style="width:100%; aspect-ratio:1/1; background:var(--deep); display:flex; align-items:center; justify-content:center; color:var(--fog);">No image</div>
+          {% endif %}
+          <div class="mask-vignette"></div>
+          <div class="mask-shimmer"></div>
+          <div class="bolt-bl"></div>
+          <div class="bolt-br"></div>
+        </div>
+
+        {% if product.images.size > 1 %}
+          <div class="thumb-strip">
+            {% for image in product.images %}
+              <img src="{{ image | img_url: '160x160', crop: 'center' }}"
+                   alt="{{ image.alt | escape }}"
+                   data-full="{{ image | img_url: '800x800', crop: 'center' }}"
+                   class="thumb{% if forloop.first %} active{% endif %}"
+                   onclick="
+                     document.getElementById('mainProductImg').src = this.dataset.full;
+                     document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+                     this.classList.add('active');
+                   ">
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Right: product info -->
+      <div class="reveal reveal-delay-1" style="min-width:0;">
+        <div class="section-tag" style="margin-bottom:16px;">{{ product.vendor }}</div>
+        <h2 style="font-family:'Oswald',sans-serif; font-weight:700; font-size:clamp(24px,3vw,40px); letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;">{{ product.title }}</h2>
+
+        <div style="display:inline-flex; align-items:baseline; gap:4px; margin:20px 0 28px; padding:16px 24px; border:1px solid rgba(0,212,255,0.25); background:rgba(0,212,255,0.04);">
+          <span style="font-family:'Oswald',sans-serif; font-size:36px; font-weight:700; color:var(--cyan);">{{ product.price | money }}</span>
+          {% if product.compare_at_price > product.price %}
+            <span style="font-size:16px; color:var(--fog); text-decoration:line-through; margin-left:8px;">{{ product.compare_at_price | money }}</span>
+          {% endif %}
+        </div>
+
+        {% if product.description != blank %}
+          <div style="color:var(--fog); font-size:15px; line-height:1.7; margin-bottom:28px; border-left:2px solid rgba(0,212,255,0.3); padding-left:16px;">
+            {{ product.description }}
+          </div>
+        {% endif %}
+
+        {% form 'product', product %}
+          {% if product.variants.size > 1 %}
+            <div style="margin-bottom:24px;">
+              <label style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:3px; text-transform:uppercase; color:var(--fog); display:block; margin-bottom:8px;">Select Option</label>
+              <select name="id" style="background:var(--ocean); border:1px solid var(--border); color:var(--white); padding:12px 16px; font-family:'Barlow',sans-serif; font-size:14px; width:100%; appearance:none; cursor:pointer;">
+                {% for variant in product.variants %}
+                  <option value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
+                    {{ variant.title }}{% unless variant.available %} — Out of Stock{% endunless %}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          {% else %}
+            <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+          {% endif %}
+
+          {% if product.available %}
+            <button type="submit" class="btn-primary" style="width:100%; font-size:15px; padding:18px; letter-spacing:3px; cursor:pointer; border:none;">
+              Add to Cart →
+            </button>
+          {% else %}
+            <div style="text-align:center; padding:18px; border:1px solid var(--border); font-family:'Barlow Condensed',sans-serif; letter-spacing:3px; text-transform:uppercase; font-size:13px; color:var(--fog);">Out of Stock</div>
+          {% endif %}
+        {% endform %}
+
+        <div style="margin-top:28px; padding:16px; border:1px solid var(--border); background:rgba(0,212,255,0.02);">
+          <div style="display:flex; gap:12px; align-items:flex-start;">
+            <span style="font-size:20px;">🎖️</span>
+            <div>
+              <div style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:4px;">Veteran Owned</div>
+              <div style="font-size:13px; color:var(--fog); line-height:1.6;">Every purchase supports the HERO mission — Help Everyone Remain Operational.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

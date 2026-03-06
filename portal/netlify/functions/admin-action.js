@@ -39,7 +39,7 @@ async function sendEmail(to, subject, html) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      from: 'Hero Diving & Marine <admin@herodivingandmarine.com>',
+      from: 'HERO Diving & Marine <admin@herodivingandmarine.com>',
       to: [to],
       subject,
       html
@@ -135,7 +135,7 @@ exports.handler = async (event) => {
       ]);
 
       if (diverEmail) {
-        await sendEmail(diverEmail, 'Welcome to the Hero Diver Network!', `
+        await sendEmail(diverEmail, 'Welcome to the HERO Diver Network!', `
           <!DOCTYPE html><html><body style="background:#020810;color:#f0f4f8;font-family:Arial;padding:32px;max-width:600px;margin:0 auto;">
           <div style="text-align:center;margin-bottom:32px;">
             <div style="font-family:Georgia,serif;font-size:28px;letter-spacing:6px;text-transform:uppercase;color:#f0f4f8;">HERO</div>
@@ -143,10 +143,10 @@ exports.handler = async (event) => {
           </div>
           <div style="background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);padding:24px;margin-bottom:24px;">
             <h2 style="color:#00d4ff;font-size:20px;letter-spacing:2px;text-transform:uppercase;margin:0 0 12px;">You're Approved!</h2>
-            <p style="color:#8a9bb5;line-height:1.7;margin:0;">Welcome to the Hero Diver Network, ${diverName || 'Diver'}. Your application has been approved and you can now accept jobs on the job board.</p>
+            <p style="color:#8a9bb5;line-height:1.7;margin:0;">Welcome to the HERO Diver Network, ${diverName || 'Diver'}. Your application has been approved and you can now accept jobs on the job board.</p>
           </div>
           <a href="${PORTAL_BASE_URL}/job-board.html" style="display:inline-block;background:#e8272c;color:#fff;padding:14px 40px;font-family:Georgia,serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;font-weight:bold;">View Job Board →</a>
-          <p style="color:#8a9bb5;font-size:12px;margin-top:24px;">Hero Diving &amp; Marine Services · herodivingandmarine.com</p>
+          <p style="color:#8a9bb5;font-size:12px;margin-top:24px;">HERO Diving &amp; Marine Services · herodivingandmarine.com</p>
           </body></html>
         `).catch(err => console.error('Welcome email failed:', err));
       }
@@ -163,12 +163,12 @@ exports.handler = async (event) => {
       });
 
       if (diverEmail) {
-        await sendEmail(diverEmail, 'Hero Diver Network — Application Update', `
+        await sendEmail(diverEmail, 'HERO Diver Network — Application Update', `
           <!DOCTYPE html><html><body style="background:#020810;color:#f0f4f8;font-family:Arial;padding:32px;max-width:600px;margin:0 auto;">
           <p>Hi ${diverName || 'there'},</p>
-          <p style="color:#8a9bb5;">Thank you for applying to the Hero Diver Network. After review, we're unable to approve your application at this time.</p>
+          <p style="color:#8a9bb5;">Thank you for applying to the HERO Diver Network. After review, we're unable to approve your application at this time.</p>
           <p style="color:#8a9bb5;">Please contact us at <a href="mailto:info@herodivingandmarine.com" style="color:#00d4ff;">info@herodivingandmarine.com</a> if you have questions.</p>
-          <p style="color:#8a9bb5;font-size:12px;">Hero Diving &amp; Marine Services</p>
+          <p style="color:#8a9bb5;font-size:12px;">HERO Diving &amp; Marine Services</p>
           </body></html>
         `).catch(() => {});
       }

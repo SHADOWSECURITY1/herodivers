@@ -201,19 +201,19 @@ exports.handler = async (event) => {
         row('Diver', diverName || d.diver_name),
         row('Certification Agency', d.cert_agency),
         row('Certification Number', d.cert_number),
-        row('Hero Divers Member ID', d.hero_member_id)
+        row('HERO Divers Member ID', d.hero_member_id)
       ])}
 
     </div>
 
     <!-- Footer -->
     <div style="background:#0a1a30; padding:24px 32px; text-align:center; border-top:1px solid rgba(0,212,255,0.1);">
-      <div style="font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#8a9bb5; margin-bottom:8px;">Hero Diving &amp; Marine Services</div>
+      <div style="font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#8a9bb5; margin-bottom:8px;">HERO Diving &amp; Marine Services</div>
       <div style="font-size:12px; color:#8a9bb5;">
         <a href="https://herodivingandmarine.com" style="color:#00d4ff; text-decoration:none;">herodivingandmarine.com</a>
       </div>
       <div style="margin-top:16px; font-size:11px; color:#8a9bb5; opacity:0.6;">
-        This report was prepared by a certified Hero Divers network professional. Report ID: ${reportId || 'N/A'}
+        This report was prepared by a certified HERO Divers network professional. Report ID: ${reportId || 'N/A'}
       </div>
     </div>
 
@@ -230,7 +230,7 @@ exports.handler = async (event) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'Hero Diving & Marine <reports@herodivingandmarine.com>',
+        from: 'HERO Diving & Marine <reports@herodivingandmarine.com>',
         to: [clientEmail],
         subject: `${d.report_type || 'Inspection Report'} — ${vesselName || 'Your Vessel'}`,
         html: emailHtml
