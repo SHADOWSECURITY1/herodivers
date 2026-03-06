@@ -562,6 +562,7 @@
   let currentSection = 1;
   let session = null;
   let activeJobId = null; // set if launched from a job
+  let editReportId = null; // set if editing an existing draft
   const beforeFiles = [];
   const afterFiles = [];
 
@@ -678,7 +679,12 @@
       report_data: formData
     };
 
-    const { data, error } = await supabase.from('reports').insert([payload]).select().single();
+    let data, error;
+    if (editReportId) {
+      ({ data, error } = await supabase.from('reports').update(payload).eq('id', editReportId).eq('diver_id', session.user.id).select().single());
+    } else {
+      ({ data, error } = await supabase.from('reports').insert([payload]).select().single());
+    }
     if (error) throw error;
     return data;
   }
@@ -696,9 +702,33 @@
     setupUploadZone('beforeDropZone', 'beforeFileInput', beforeFiles, 'beforePreview');
     setupUploadZone('afterDropZone', 'afterFileInput', afterFiles, 'afterPreview');
 
-    // Pre-fill from job if ?jobId is in URL
+    // Pre-fill from job if ?jobId is in URL, or load draft for edit if ?edit= is set
     const urlParams = new URLSearchParams(window.location.search);
+    editReportId = urlParams.get('edit');
     activeJobId = urlParams.get('jobId');
+
+    if (editReportId) {
+      // Edit mode: load existing draft and pre-fill all fields
+      document.querySelector('.page-title').textContent = 'Edit Report';
+      document.querySelector('.page-subtitle').textContent = 'Update your draft — save or send when ready';
+      const { data: existingReport, error: loadErr } = await supabase
+        .from('reports').select('*').eq('id', editReportId).eq('diver_id', session.user.id).maybeSingle();
+      if (loadErr || !existingReport) {
+        toast('Could not load report for editing', 'error');
+      } else {
+        const rd = existingReport.report_data || {};
+        document.querySelectorAll('#reportForm [name]').forEach(el => {
+          const val = rd[el.name];
+          if (val === undefined || val === null) return;
+          if (el.type === 'radio') {
+            if (el.value === String(val)) el.checked = true;
+          } else {
+            el.value = val;
+          }
+        });
+      }
+    }
+
     if (activeJobId) {
       const { data: job } = await supabase.from('jobs').select('*').eq('id', activeJobId).eq('diver_id', session.user.id).maybeSingle();
       if (job) {

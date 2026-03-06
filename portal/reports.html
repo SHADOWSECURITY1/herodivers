@@ -138,6 +138,7 @@
         <td class="table-actions">
           <a href="report-view.html?id=${r.id}" class="table-btn">View</a>
           <a href="report-view.html?id=${r.id}" class="table-btn" onclick="window.print(); return false;" title="Print">Print</a>
+          ${r.status === 'draft' ? `<a href="new-report.html?edit=${r.id}" class="table-btn">Edit</a>` : ''}
           ${r.status === 'draft' ? `<button class="table-btn send" data-id="${r.id}" data-email="${r.client_email}" data-vessel="${r.vessel_name}" data-client="${r.client_name}">Send</button>` : ''}
         </td>
       </tr>
